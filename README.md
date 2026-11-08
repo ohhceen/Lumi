@@ -74,9 +74,9 @@ npm install
 
 In the Supabase dashboard, open **SQL Editor**, then paste and run each file in `supabase/migrations/` **in order**:
 
-1. `20261108000001_init.sql`
-2. `20261108000002_queries.sql`
-3. `20261108000003_lock_trigger_function.sql`
+1. `20261108144954_init.sql`
+2. `20261108145019_queries.sql`
+3. `20261108145118_lock_trigger_function.sql`
 
 (Or, with the Supabase CLI linked to your project: `npx supabase db push`.)
 
