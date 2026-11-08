@@ -74,7 +74,7 @@ export function Mascot({ mood = "happy", className, title = "Bibo, maskot MyMone
       <ellipse cx="44" cy="44" rx="16" ry="10" fill="#bfe0ff" opacity="0.8" transform="rotate(-25 44 44)" />
       {/* belly coin */}
       <ellipse cx="62" cy="103" rx="16" ry="11" fill="#c8b5f5" />
-      <text x="62" y="108" textAnchor="middle" fontSize="13" fontWeight="900" fill="#7f62d6" fontFamily="var(--font-nunito), sans-serif">Rp</text>
+      <text x="62" y="108" textAnchor="middle" fontSize="13" fontWeight="700" fill="#7f62d6" fontFamily="var(--font-poppins), sans-serif">Rp</text>
       {/* cheeks */}
       <ellipse cx="34" cy="74" rx="7" ry="4.5" fill="#f49a9a" opacity="0.6" />
       <ellipse cx="90" cy="74" rx="7" ry="4.5" fill="#f49a9a" opacity="0.6" />

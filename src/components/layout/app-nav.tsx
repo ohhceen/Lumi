@@ -16,7 +16,7 @@ export function Sidebar({ name, children }: { name: string; children?: React.Rea
       <Link href="/" className="group mb-8 flex items-center gap-3 px-2">
         <Mascot mood="happy" className="size-12 transition-transform group-hover:animate-wiggle" />
         <div>
-          <p className="text-lg leading-none font-black text-ink">
+          <p className="text-base leading-none font-black whitespace-nowrap text-ink">
             MyMoney <span className="text-primary-strong">Buddy</span>
           </p>
           <p className="mt-1 text-xs font-bold text-ink-faint">Teman keuanganmu</p>

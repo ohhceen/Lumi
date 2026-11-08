@@ -4,7 +4,14 @@
    MyMoney Buddy design tokens
    ------------------------------------------------------------------ */
 @theme {
-  --font-sans: var(--font-nunito), ui-rounded, "Segoe UI", system-ui, sans-serif;
+  --font-sans: var(--font-poppins), "Segoe UI", system-ui, sans-serif;
+
+  /* Poppins runs heavier than a rounded font: shift the weight scale down
+     one step so font-black/extrabold headings stay crisp, not bulky. */
+  --font-weight-semibold: 500;
+  --font-weight-bold: 600;
+  --font-weight-extrabold: 600;
+  --font-weight-black: 700;
 
   /* Galaxy palette — brand pastels glowing on deep space */
   --color-primary: #8ec5f7;

@@ -19,8 +19,8 @@ export const AXIS = {
   stroke: "#8a8fc0",
   fill: "#8a8fc0",
   fontSize: 11,
-  fontWeight: 700,
-  fontFamily: "var(--font-nunito), sans-serif",
+  fontWeight: 500,
+  fontFamily: "var(--font-poppins), sans-serif",
 } as const;
 
 export const GRID = "rgb(170 160 255 / 0.14)";

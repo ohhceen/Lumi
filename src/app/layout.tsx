@@ -1,9 +1,9 @@
 import type { Metadata, Viewport } from "next";
-import { Nunito } from "next/font/google";
+import { Poppins } from "next/font/google";
 import { Toaster } from "sonner";
 import "./globals.css";
 
-const nunito = Nunito({ subsets: ["latin"], variable: "--font-nunito", weight: ["400", "600", "700", "800", "900"] });
+const poppins = Poppins({ subsets: ["latin"], variable: "--font-poppins", weight: ["400", "500", "600", "700"], display: "swap" });
 
 export const metadata: Metadata = {
   title: { default: "MyMoney Buddy", template: "%s · MyMoney Buddy" },
@@ -16,14 +16,14 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="id" className={nunito.variable}>
+    <html lang="id" className={poppins.variable}>
       <body className="min-h-dvh">
         {children}
         <Toaster
           position="top-center"
           theme="dark"
           richColors
-          toastOptions={{ style: { borderRadius: "1rem", fontFamily: "var(--font-nunito)", fontWeight: 700 } }}
+          toastOptions={{ style: { borderRadius: "1rem", fontFamily: "var(--font-poppins)", fontWeight: 600 } }}
         />
       </body>
     </html>
