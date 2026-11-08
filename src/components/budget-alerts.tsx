@@ -21,7 +21,7 @@ export function BudgetAlerts({ progress, className }: { progress: BudgetProgress
             key={p.budgetId}
             className={cn(
               "flex items-start gap-2 rounded-2xl px-3 py-2.5 text-sm font-bold",
-              over ? "bg-expense-soft text-expense-strong" : p.status === "danger" ? "bg-[#fdeedd] text-[#b8621c]" : "bg-accent-soft text-accent-strong",
+              over ? "bg-expense-soft text-expense-strong" : p.status === "danger" ? "bg-warn-soft text-warn" : "bg-accent-soft text-accent-strong",
             )}
           >
             <TriangleAlert className="mt-0.5 size-4 shrink-0" />

@@ -64,8 +64,8 @@ export function TransactionForm({
       <div role="radiogroup" aria-label="Jenis transaksi" className="grid grid-cols-2 gap-2 rounded-2xl bg-cream p-1.5">
         {(
           [
-            { v: "expense", label: "Pengeluaran", icon: TrendingDown, on: "bg-expense-strong text-white shadow-soft" },
-            { v: "income", label: "Pemasukan", icon: TrendingUp, on: "bg-income-strong text-white shadow-soft" },
+            { v: "expense", label: "Pengeluaran", icon: TrendingDown, on: "bg-btn-expense text-white shadow-soft" },
+            { v: "income", label: "Pemasukan", icon: TrendingUp, on: "bg-btn-income text-white shadow-soft" },
           ] as const
         ).map(({ v, label, icon: Icon, on }) => (
           <button
@@ -76,7 +76,7 @@ export function TransactionForm({
             onClick={() => switchType(v)}
             className={cn(
               "flex h-11 items-center justify-center gap-2 rounded-xl text-sm font-extrabold transition-all",
-              type === v ? on : "text-ink-soft hover:bg-white",
+              type === v ? on : "text-ink-soft hover:bg-white/5",
             )}
           >
             <Icon className="size-4" /> {label}

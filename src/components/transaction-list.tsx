@@ -96,7 +96,7 @@ export function TransactionTable({ transactions, categories, today }: { transact
         </thead>
         <tbody className="divide-y divide-line/70">
           {transactions.map((t) => (
-            <tr key={t.id} className="group transition-colors hover:bg-cream/70">
+            <tr key={t.id} className="group transition-colors hover:bg-white/5">
               <td className="py-3 pr-3 font-bold whitespace-nowrap text-ink-soft">{formatDateDisplay(t.transaction_date)}</td>
               <td className="max-w-64 py-3 pr-3">
                 <p className="truncate font-extrabold text-ink">{t.description}</p>

@@ -56,7 +56,7 @@ export function Mascot({ mood = "happy", className, title = "Bibo, maskot MyMone
   };
 
   return (
-    <svg viewBox="0 0 124 132" role="img" aria-label={title} className={cn("select-none", className)}>
+    <svg viewBox="0 0 124 132" role="img" aria-label={title} className={cn("select-none drop-shadow-[0_0_18px_rgba(142,197,247,0.45)]", className)}>
       {/* antennae */}
       <path d="M46 26 Q40 12 30 8" stroke="#5fa6ea" strokeWidth="4" strokeLinecap="round" fill="none" />
       <path d="M78 26 Q84 12 94 8" stroke="#5fa6ea" strokeWidth="4" strokeLinecap="round" fill="none" />

@@ -2,7 +2,7 @@
 
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 import { formatIDR, formatPercent } from "@/lib/format";
-import { CATEGORICAL, OTHER_COLOR } from "./chart-theme";
+import { CATEGORICAL, OTHER_COLOR, SURFACE } from "./chart-theme";
 import { ChartTooltip } from "./chart-tooltip";
 
 export interface Slice {
@@ -32,7 +32,7 @@ export function CategoryDonut({ slices, total }: { slices: Slice[]; total: numbe
       <div className="relative size-48 shrink-0">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
-            <Pie animationDuration={600} data={data} dataKey="amount" nameKey="name" innerRadius="62%" outerRadius="100%" paddingAngle={data.length > 1 ? 2 : 0} stroke="#fff" strokeWidth={2} cornerRadius={4}>
+            <Pie animationDuration={600} data={data} dataKey="amount" nameKey="name" innerRadius="62%" outerRadius="100%" paddingAngle={data.length > 1 ? 2 : 0} stroke={SURFACE} strokeWidth={2} cornerRadius={4}>
               {data.map((d) => (
                 <Cell key={d.name} fill={d.color} />
               ))}

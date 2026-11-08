@@ -8,13 +8,13 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        primary: "bg-primary-strong text-white shadow-[0_3px_0_0_#2f7cc7] hover:bg-[#3f91e0] hover:-translate-y-0.5",
-        secondary: "bg-secondary-soft text-secondary-strong hover:bg-secondary/40",
-        income: "bg-income-strong text-white shadow-[0_3px_0_0_#226b41] hover:-translate-y-0.5",
-        expense: "bg-expense-strong text-white shadow-[0_3px_0_0_#9b3236] hover:-translate-y-0.5",
-        outline: "border-2 border-line bg-card text-ink hover:border-primary hover:bg-primary-soft/50",
-        ghost: "text-ink-soft hover:bg-primary-soft/60 hover:text-ink",
-        danger: "bg-expense-strong text-white hover:bg-[#b33c3f]",
+        primary: "bg-gradient-to-r from-[#4f86ea] to-[#8b6cf0] text-white shadow-glow hover:brightness-110 hover:-translate-y-0.5",
+        secondary: "bg-secondary-soft text-secondary-strong ring-1 ring-secondary/30 hover:bg-secondary/25",
+        income: "bg-btn-income text-white shadow-[0_0_20px_-6px_rgb(35_149_95/0.9)] hover:brightness-110 hover:-translate-y-0.5",
+        expense: "bg-btn-expense text-white shadow-[0_0_20px_-6px_rgb(212_82_79/0.9)] hover:brightness-110 hover:-translate-y-0.5",
+        outline: "border-2 border-line bg-white/5 text-ink backdrop-blur hover:border-primary/60 hover:bg-primary-soft",
+        ghost: "text-ink-soft hover:bg-white/10 hover:text-ink",
+        danger: "bg-btn-expense text-white hover:brightness-110",
       },
       size: {
         sm: "h-9 px-3 text-sm",

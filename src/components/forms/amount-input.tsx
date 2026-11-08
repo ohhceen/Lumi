@@ -25,7 +25,7 @@ export function AmountInput({
   return (
     <div
       className={cn(
-        "flex h-14 items-center rounded-2xl border-2 border-line bg-white px-4 transition-colors focus-within:border-primary-strong hover:border-primary/70",
+        "flex h-14 items-center rounded-2xl border-2 border-line bg-field px-4 transition-colors focus-within:border-primary-strong hover:border-primary/70",
         invalid && "border-expense-strong",
         className,
       )}

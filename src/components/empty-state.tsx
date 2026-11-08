@@ -15,7 +15,7 @@ export function EmptyState({
   className?: string;
 }) {
   return (
-    <div className={cn("flex flex-col items-center justify-center rounded-3xl border-2 border-dashed border-line px-6 py-10 text-center", className)}>
+    <div className={cn("flex flex-col items-center justify-center rounded-3xl border-2 border-dashed border-line bg-white/[0.02] px-6 py-10 text-center", className)}>
       <Mascot mood={mood} className="size-20 animate-float" />
       <p className="mt-3 text-base font-black text-ink">{title}</p>
       {description ? <p className="mt-1 max-w-sm text-sm font-semibold text-ink-soft">{description}</p> : null}

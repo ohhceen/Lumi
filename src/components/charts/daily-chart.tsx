@@ -2,7 +2,7 @@
 
 import { Bar, BarChart, CartesianGrid, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { formatIDRCompact } from "@/lib/format";
-import { AXIS, GRID, SERIES } from "./chart-theme";
+import { AXIS, CURSOR_FILL, GRID, MUTED_LINE, SERIES } from "./chart-theme";
 import { ChartTooltip } from "./chart-tooltip";
 
 export interface DailyPoint {
@@ -21,15 +21,15 @@ export function DailySpendingChart({ data, average, height = 220 }: { data: Dail
           <XAxis dataKey="day" tickLine={false} axisLine={false} tick={AXIS} interval="preserveStartEnd" minTickGap={8} />
           <YAxis tickLine={false} axisLine={false} tick={AXIS} width={48} tickFormatter={(v) => formatIDRCompact(Number(v))} />
           <Tooltip
-            cursor={{ fill: "rgb(142 197 247 / 0.15)", radius: 6 }}
+            cursor={{ fill: CURSOR_FILL, radius: 6 }}
             content={<ChartTooltip labelFormatter={(l) => `Tanggal ${l}`} />}
           />
           {average && average > 0 ? (
             <ReferenceLine
               y={average}
-              stroke="#5b6b82"
+              stroke={MUTED_LINE}
               strokeDasharray="4 4"
-              label={{ value: `rata-rata ${formatIDRCompact(average)}`, position: "insideTopRight", fill: "#5b6b82", fontSize: 11, fontWeight: 800 }}
+              label={{ value: `rata-rata ${formatIDRCompact(average)}`, position: "insideTopRight", fill: MUTED_LINE, fontSize: 11, fontWeight: 800 }}
             />
           ) : null}
           <Bar animationDuration={600} dataKey="expense" name="Pengeluaran" fill={SERIES.expense} radius={[4, 4, 0, 0]} maxBarSize={18} />

@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#8EC5F7",
+  themeColor: "#07061c",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
@@ -21,6 +21,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         {children}
         <Toaster
           position="top-center"
+          theme="dark"
           richColors
           toastOptions={{ style: { borderRadius: "1rem", fontFamily: "var(--font-nunito)", fontWeight: 700 } }}
         />

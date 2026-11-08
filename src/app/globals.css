@@ -6,40 +6,50 @@
 @theme {
   --font-sans: var(--font-nunito), ui-rounded, "Segoe UI", system-ui, sans-serif;
 
-  /* Brand palette */
+  /* Galaxy palette — brand pastels glowing on deep space */
   --color-primary: #8ec5f7;
-  --color-primary-strong: #4a9be8;   /* text/icons on light bg (contrast) */
-  --color-primary-soft: #e3f1fd;
+  --color-primary-strong: #9fd0ff;    /* text / icons on dark */
+  --color-primary-soft: rgb(142 197 247 / 0.14);
   --color-secondary: #c8b5f5;
-  --color-secondary-strong: #7f62d6;
-  --color-secondary-soft: #f1ecfd;
-  --color-cream: #fff9f0;
-  --color-card: #ffffff;
+  --color-secondary-strong: #d4c4ff;
+  --color-secondary-soft: rgb(200 181 245 / 0.14);
+  --color-cream: #0d0b2b;             /* deep space: page + inset surfaces */
+  --color-card: rgb(30 27 74 / 0.62); /* glass panel */
+  --color-field: rgb(12 10 38 / 0.75);
+  --color-popover: #1d1a4a;
   --color-income: #9bd8b0;
-  --color-income-strong: #2f8f57;
-  --color-income-soft: #e6f6eb;
+  --color-income-strong: #86e8ab;
+  --color-income-soft: rgb(155 216 176 / 0.14);
   --color-expense: #f49a9a;
-  --color-expense-strong: #c9474a;
-  --color-expense-soft: #fde9e9;
+  --color-expense-strong: #ffa3a3;
+  --color-expense-soft: rgb(244 154 154 / 0.14);
   --color-accent: #ffe39a;
-  --color-accent-strong: #b58400;
-  --color-accent-soft: #fff6d9;
-  --color-ink: #28364a;
-  --color-ink-soft: #5b6b82;
-  --color-ink-faint: #94a1b4;
-  --color-line: #ece4d6;
+  --color-accent-strong: #ffdd7a;
+  --color-accent-soft: rgb(255 227 154 / 0.14);
+  --color-warn: #ffb27a;
+  --color-warn-soft: rgb(255 178 122 / 0.15);
+  --color-ink: #eef0ff;
+  --color-ink-soft: #b9bde6;
+  --color-ink-faint: #8a8fc0;
+  --color-line: rgb(170 160 255 / 0.18);
+
+  /* solid fills for buttons (white text on top) */
+  --color-btn-income: #23955f;
+  --color-btn-expense: #d4524f;
 
   --radius-xl: 1rem;
   --radius-2xl: 1.25rem;
   --radius-3xl: 1.75rem;
 
-  --shadow-soft: 0 2px 0 0 rgb(40 54 74 / 0.04), 0 8px 24px -12px rgb(40 54 74 / 0.18);
-  --shadow-pop: 0 4px 0 0 rgb(40 54 74 / 0.06), 0 16px 32px -14px rgb(74 155 232 / 0.35);
+  --shadow-soft: 0 1px 0 0 rgb(255 255 255 / 0.06) inset, 0 10px 30px -12px rgb(0 0 0 / 0.6);
+  --shadow-pop: 0 1px 0 0 rgb(255 255 255 / 0.08) inset, 0 18px 40px -14px rgb(139 108 240 / 0.55);
+  --shadow-glow: 0 0 24px -4px rgb(139 108 240 / 0.7);
 
   --animate-float: float 6s ease-in-out infinite;
   --animate-twinkle: twinkle 3s ease-in-out infinite;
   --animate-pop-in: pop-in 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
   --animate-wiggle: wiggle 2.4s ease-in-out infinite;
+  --animate-shoot: shoot 7s ease-in infinite;
 
   @keyframes float {
     0%, 100% { transform: translateY(0); }
@@ -53,6 +63,11 @@
     from { opacity: 0; transform: translateY(6px) scale(0.98); }
     to { opacity: 1; transform: translateY(0) scale(1); }
   }
+  @keyframes shoot {
+    0%, 86% { opacity: 0; transform: translateX(0) rotate(-25deg); }
+    88% { opacity: 1; }
+    100% { opacity: 0; transform: translateX(160px) rotate(-25deg); }
+  }
   @keyframes wiggle {
     0%, 100% { transform: rotate(0deg); }
     10% { transform: rotate(-8deg); }
@@ -64,18 +79,19 @@
 @layer base {
   html {
     -webkit-tap-highlight-color: transparent;
+    color-scheme: dark;
   }
   body {
-    background-color: var(--color-cream);
+    background-color: #07061c;
     color: var(--color-ink);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
   }
   ::selection {
-    background: var(--color-primary-soft);
+    background: rgb(142 197 247 / 0.35);
   }
   :focus-visible {
-    outline: 3px solid var(--color-primary);
+    outline: 3px solid var(--color-secondary);
     outline-offset: 2px;
   }
   input[type="date"]::-webkit-calendar-picker-indicator,
@@ -85,17 +101,63 @@
   }
 }
 
-/* Soft dotted "space" backdrop used behind the app */
+/* ------------------------------------------------------------------
+   Galaxy backdrop: nebula glows + three star layers (fixed, behind all)
+   ------------------------------------------------------------------ */
 .bg-space {
+  position: relative;
+  isolation: isolate;
+}
+.bg-space::before,
+.bg-space::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+.bg-space::before {
+  background:
+    radial-gradient(ellipse 60% 45% at 85% 5%, rgb(139 108 240 / 0.38), transparent 70%),
+    radial-gradient(ellipse 50% 40% at 5% 40%, rgb(74 155 232 / 0.28), transparent 70%),
+    radial-gradient(ellipse 55% 40% at 70% 95%, rgb(232 123 164 / 0.22), transparent 70%),
+    radial-gradient(ellipse 40% 30% at 35% 75%, rgb(27 175 122 / 0.12), transparent 70%),
+    linear-gradient(180deg, #0a0826 0%, #07061c 55%, #0b0724 100%);
+}
+.bg-space::after {
   background-image:
-    radial-gradient(circle at 12% 18%, rgb(142 197 247 / 0.18) 0 160px, transparent 161px),
-    radial-gradient(circle at 92% 8%, rgb(200 181 245 / 0.18) 0 200px, transparent 201px),
-    radial-gradient(rgb(40 54 74 / 0.05) 1px, transparent 1px);
-  background-size: auto, auto, 22px 22px;
+    radial-gradient(1px 1px at 20px 30px, #fff, transparent),
+    radial-gradient(1px 1px at 120px 80px, rgb(255 255 255 / 0.8), transparent),
+    radial-gradient(1.5px 1.5px at 200px 160px, #ffe39a, transparent),
+    radial-gradient(1px 1px at 60px 210px, rgb(255 255 255 / 0.7), transparent),
+    radial-gradient(1px 1px at 260px 40px, rgb(200 181 245 / 0.9), transparent),
+    radial-gradient(2px 2px at 330px 260px, rgb(142 197 247 / 0.9), transparent),
+    radial-gradient(1px 1px at 300px 140px, rgb(255 255 255 / 0.6), transparent);
+  background-size: 360px 300px;
+  animation: twinkle-field 6s ease-in-out infinite alternate;
+}
+@keyframes twinkle-field {
+  from { opacity: 0.55; }
+  to { opacity: 1; }
+}
+
+/* Frosted glass panel */
+.glass {
+  background-color: var(--color-card);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+}
+
+/* Big gradient headline text */
+.text-galaxy {
+  background: linear-gradient(90deg, #ffffff 0%, #c8b5f5 45%, #8ec5f7 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 .select-chevron {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%235b6b82' stroke-width='2.5' stroke-linecap='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23b9bde6' stroke-width='2.5' stroke-linecap='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 0.9rem center;
   background-size: 16px;

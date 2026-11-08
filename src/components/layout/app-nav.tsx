@@ -12,7 +12,7 @@ import { NAV_ITEMS, isActive } from "./nav-items";
 export function Sidebar({ name, children }: { name: string; children?: React.ReactNode }) {
   const pathname = usePathname();
   return (
-    <aside className="sticky top-0 hidden h-dvh w-64 shrink-0 flex-col border-r border-line/70 bg-card/80 px-4 py-6 backdrop-blur lg:flex">
+    <aside className="sticky top-0 hidden h-dvh w-64 shrink-0 flex-col glass border-r border-line px-4 py-6 lg:flex">
       <Link href="/" className="group mb-8 flex items-center gap-3 px-2">
         <Mascot mood="happy" className="size-12 transition-transform group-hover:animate-wiggle" />
         <div>
@@ -35,10 +35,10 @@ export function Sidebar({ name, children }: { name: string; children?: React.Rea
               aria-current={active ? "page" : undefined}
               className={cn(
                 "group flex items-center gap-3 rounded-2xl px-3 py-2.5 text-sm font-extrabold transition-all",
-                active ? "bg-primary-soft text-primary-strong shadow-[inset_0_0_0_2px_#8ec5f7]" : "text-ink-soft hover:bg-cream hover:text-ink",
+                active ? "bg-gradient-to-r from-[#4f86ea]/30 to-[#8b6cf0]/30 text-ink shadow-[inset_0_0_0_1px_rgb(200_181_245/0.5)]" : "text-ink-soft hover:bg-white/5 hover:text-ink",
               )}
             >
-              <Icon className={cn("size-5 transition-transform group-hover:scale-110", active && "text-primary-strong")} strokeWidth={2.4} />
+              <Icon className={cn("size-5 transition-transform group-hover:scale-110", active && "text-secondary-strong")} strokeWidth={2.4} />
               {label}
               {active ? <Sparkle className="ml-auto size-3 text-accent-strong" /> : null}
             </Link>
@@ -61,7 +61,7 @@ export function Sidebar({ name, children }: { name: string; children?: React.Rea
 
 export function MobileTopBar({ children }: { children?: React.ReactNode }) {
   return (
-    <header className="sticky top-0 z-30 flex items-center justify-between border-b border-line/70 bg-cream/90 px-4 py-3 backdrop-blur lg:hidden">
+    <header className="sticky top-0 z-30 flex items-center justify-between border-b border-line bg-[#0b0926]/80 px-4 py-3 backdrop-blur-md lg:hidden">
       <Link href="/" className="flex items-center gap-2">
         <Mascot className="size-9" />
         <span className="text-base font-black">
@@ -78,7 +78,7 @@ export function BottomNav() {
   return (
     <nav
       aria-label="Navigasi utama"
-      className="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-card/95 pb-[env(safe-area-inset-bottom)] backdrop-blur lg:hidden"
+      className="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-[#0b0926]/90 pb-[env(safe-area-inset-bottom)] backdrop-blur-md lg:hidden"
     >
       <ul className="mx-auto grid max-w-lg grid-cols-6">
         {NAV_ITEMS.map(({ href, short, icon: Icon }) => {
@@ -88,9 +88,9 @@ export function BottomNav() {
               <Link
                 href={href}
                 aria-current={active ? "page" : undefined}
-                className={cn("flex flex-col items-center gap-0.5 py-2 text-[10px] font-extrabold transition-colors", active ? "text-primary-strong" : "text-ink-faint hover:text-ink")}
+                className={cn("flex flex-col items-center gap-0.5 py-2 text-[10px] font-extrabold transition-colors", active ? "text-secondary-strong" : "text-ink-faint hover:text-ink")}
               >
-                <span className={cn("rounded-full px-3 py-1 transition-colors", active && "bg-primary-soft")}>
+                <span className={cn("rounded-full px-3 py-1 transition-colors", active && "bg-secondary-soft shadow-[0_0_14px_-4px_rgb(200_181_245/0.8)]")}>
                   <Icon className="size-5" strokeWidth={2.4} />
                 </span>
                 {short}

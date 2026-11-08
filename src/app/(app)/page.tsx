@@ -52,18 +52,18 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
   return (
     <div className="space-y-5">
       {/* Hero */}
-      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary via-[#a9cdf7] to-secondary p-5 text-ink shadow-pop sm:p-7">
+      <section className="relative overflow-hidden rounded-3xl border border-secondary/30 bg-[radial-gradient(ellipse_at_top_left,rgb(142_197_247/0.35),transparent_60%),radial-gradient(ellipse_at_bottom_right,rgb(232_123_164/0.3),transparent_55%),linear-gradient(135deg,#2a2378,#3b2a8c_45%,#163a78)] p-5 text-ink shadow-pop sm:p-7">
         <StarField />
         <Planet className="absolute -right-3 -bottom-4 size-24 opacity-70 sm:right-40" />
         <div className="relative flex flex-col gap-4 sm:flex-row sm:items-center">
           <Mascot mood={mood} className="size-24 shrink-0 animate-float drop-shadow-lg sm:size-28" />
           <div className="flex-1">
-            <p className="text-sm font-extrabold text-ink/70 capitalize">{formatDateLong(ctx.today)}</p>
-            <h1 className="mt-0.5 text-2xl font-black sm:text-3xl">
+            <p className="text-sm font-extrabold text-ink-soft capitalize">{formatDateLong(ctx.today)}</p>
+            <h1 className="text-galaxy mt-0.5 text-2xl font-black sm:text-3xl">
               {greeting(hourInTimezone(ctx.timezone))}, {ctx.profile.name}! 👋
             </h1>
-            <p className="mt-1 text-sm font-bold text-ink/80">{motivationalMessage(ctx.today)}</p>
-            <p className="mt-2 inline-flex rounded-full bg-white/70 px-3 py-1 text-xs font-extrabold text-ink">Bibo: {note}</p>
+            <p className="mt-1 text-sm font-bold text-ink-soft">{motivationalMessage(ctx.today)}</p>
+            <p className="mt-2 inline-flex rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-extrabold text-ink backdrop-blur">Bibo: {note}</p>
           </div>
           <MonthPicker value={ym} className="self-start sm:self-center" />
         </div>

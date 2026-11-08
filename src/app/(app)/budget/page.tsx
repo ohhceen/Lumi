@@ -53,7 +53,7 @@ export default async function BudgetPage({ searchParams }: { searchParams: Promi
         <MonthPicker value={ym} />
       </PageHeader>
 
-      <Card className="mb-5 bg-gradient-to-br from-white to-secondary-soft">
+      <Card className="mb-5 bg-gradient-to-br from-[#2b2470]/70 via-[#1e1b4a]/70 to-[#173564]/70">
         <div className="flex flex-col gap-5 md:flex-row md:items-center">
           <Mascot mood={overview.count === 0 ? "wink" : overview.status === "exceeded" ? "worried" : overview.status === "normal" ? "excited" : "wink"} className="size-20 shrink-0 animate-float" />
           <div className="flex-1">
