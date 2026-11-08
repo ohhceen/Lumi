@@ -53,7 +53,7 @@ Migrations are in [`supabase/migrations`](supabase/migrations):
 | `transactions` | `type`, `description`, `amount`, `category_id`, `transaction_date`, `notes`, timestamps |
 | `budgets` | `category_id`, `month`, `year`, `amount`, unique per category/month |
 
-SQL functions (all `SECURITY INVOKER`, so RLS applies): `transaction_totals`, `current_balance`, `search_transactions`, `monthly_totals`, `category_usage`, `reassign_and_delete_category`, `ensure_user_setup`. A trigger on `auth.users` creates the profile, settings and default categories for a new account.
+SQL functions: `transaction_totals`, `current_balance`, `search_transactions`, `monthly_totals`, `category_usage` and `reassign_and_delete_category` are `SECURITY INVOKER`, so RLS applies. `ensure_user_setup` is `SECURITY DEFINER` on purpose: it only sets up the calling user's own account (Supabase's security advisor flags it; that warning is expected). `handle_new_user` is not callable through the API. A trigger on `auth.users` creates the profile, settings and default categories for a new account.
 
 ---
 
@@ -76,6 +76,7 @@ In the Supabase dashboard, open **SQL Editor**, then paste and run each file in 
 
 1. `20261108000001_init.sql`
 2. `20261108000002_queries.sql`
+3. `20261108000003_lock_trigger_function.sql`
 
 (Or, with the Supabase CLI linked to your project: `npx supabase db push`.)
 
