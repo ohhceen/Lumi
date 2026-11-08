@@ -5,9 +5,10 @@ import { getSupabaseConfig } from "./config";
 
 /** Supabase client bound to the request's auth cookies (anon key + user session; RLS applies). */
 export async function createClient() {
-  const config = getSupabaseConfig();
-  if (!config) throw new Error("Supabase belum dikonfigurasi. Isi NEXT_PUBLIC_SUPABASE_URL dan NEXT_PUBLIC_SUPABASE_ANON_KEY di .env.local");
+  // Read cookies first: this marks the route as dynamic even if config is missing.
   const cookieStore = await cookies();
+  const config = getSupabaseConfig();
+  if (!config) throw new Error("Supabase belum dikonfigurasi. Isi NEXT_PUBLIC_SUPABASE_URL dan NEXT_PUBLIC_SUPABASE_ANON_KEY (di .env.local atau Environment Variables Vercel).");
   return createServerClient(config.url, config.anonKey, {
     cookies: {
       getAll() {

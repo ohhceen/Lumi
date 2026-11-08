@@ -4,6 +4,9 @@ import { TransactionDialog } from "@/components/forms/transaction-dialog";
 import { Button } from "@/components/ui/button";
 import { getAppContext, getCategories } from "@/lib/data";
 
+// Every page here is per-user and needs the login cookie: never prerender at build time.
+export const dynamic = "force-dynamic";
+
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   const [ctx, categories] = await Promise.all([getAppContext(), getCategories()]);
 
