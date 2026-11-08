@@ -1,0 +1,114 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------
+   MyMoney Buddy design tokens
+   ------------------------------------------------------------------ */
+@theme {
+  --font-sans: var(--font-nunito), ui-rounded, "Segoe UI", system-ui, sans-serif;
+
+  /* Brand palette */
+  --color-primary: #8ec5f7;
+  --color-primary-strong: #4a9be8;   /* text/icons on light bg (contrast) */
+  --color-primary-soft: #e3f1fd;
+  --color-secondary: #c8b5f5;
+  --color-secondary-strong: #7f62d6;
+  --color-secondary-soft: #f1ecfd;
+  --color-cream: #fff9f0;
+  --color-card: #ffffff;
+  --color-income: #9bd8b0;
+  --color-income-strong: #2f8f57;
+  --color-income-soft: #e6f6eb;
+  --color-expense: #f49a9a;
+  --color-expense-strong: #c9474a;
+  --color-expense-soft: #fde9e9;
+  --color-accent: #ffe39a;
+  --color-accent-strong: #b58400;
+  --color-accent-soft: #fff6d9;
+  --color-ink: #28364a;
+  --color-ink-soft: #5b6b82;
+  --color-ink-faint: #94a1b4;
+  --color-line: #ece4d6;
+
+  --radius-xl: 1rem;
+  --radius-2xl: 1.25rem;
+  --radius-3xl: 1.75rem;
+
+  --shadow-soft: 0 2px 0 0 rgb(40 54 74 / 0.04), 0 8px 24px -12px rgb(40 54 74 / 0.18);
+  --shadow-pop: 0 4px 0 0 rgb(40 54 74 / 0.06), 0 16px 32px -14px rgb(74 155 232 / 0.35);
+
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-twinkle: twinkle 3s ease-in-out infinite;
+  --animate-pop-in: pop-in 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  --animate-wiggle: wiggle 2.4s ease-in-out infinite;
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.35; transform: scale(0.85); }
+    50% { opacity: 1; transform: scale(1); }
+  }
+  @keyframes pop-in {
+    from { opacity: 0; transform: translateY(6px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  @keyframes wiggle {
+    0%, 100% { transform: rotate(0deg); }
+    10% { transform: rotate(-8deg); }
+    20% { transform: rotate(6deg); }
+    30% { transform: rotate(0deg); }
+  }
+}
+
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    background-color: var(--color-cream);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection {
+    background: var(--color-primary-soft);
+  }
+  :focus-visible {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+  input[type="date"]::-webkit-calendar-picker-indicator,
+  input[type="month"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    opacity: 0.6;
+  }
+}
+
+/* Soft dotted "space" backdrop used behind the app */
+.bg-space {
+  background-image:
+    radial-gradient(circle at 12% 18%, rgb(142 197 247 / 0.18) 0 160px, transparent 161px),
+    radial-gradient(circle at 92% 8%, rgb(200 181 245 / 0.18) 0 200px, transparent 201px),
+    radial-gradient(rgb(40 54 74 / 0.05) 1px, transparent 1px);
+  background-size: auto, auto, 22px 22px;
+}
+
+.select-chevron {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%235b6b82' stroke-width='2.5' stroke-linecap='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.9rem center;
+  background-size: 16px;
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
