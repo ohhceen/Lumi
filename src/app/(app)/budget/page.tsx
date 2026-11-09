@@ -4,7 +4,8 @@ import { BudgetRow } from "@/components/budget-row";
 import { CategoryIcon } from "@/components/category-icon";
 import { EmptyState } from "@/components/empty-state";
 import { BudgetActions, BudgetDialog, CopyBudgetsButton } from "@/components/forms/budget-dialog";
-import { Mascot } from "@/components/mascot";
+import { Character, hasCharacter } from "@/components/character";
+import { ToyBlock } from "@/components/decorations";
 import { MonthPicker } from "@/components/month-picker";
 import { PageHeader } from "@/components/page-header";
 import { Button } from "@/components/ui/button";
@@ -49,13 +50,13 @@ export default async function BudgetPage({ searchParams }: { searchParams: Promi
 
   return (
     <div>
-      <PageHeader title="Anggaran Bulanan" description="Tentukan batas belanja per kategori, Bibo bantu mengawasi.">
+      <PageHeader title="Anggaran Bulanan" description="Tentukan batas belanja per kategori, para alien bantu mengawasi.">
         <MonthPicker value={ym} />
       </PageHeader>
 
-      <Card className="mb-5 bg-gradient-to-br from-[#2b2470]/70 via-[#1e1b4a]/70 to-[#173564]/70">
+      <Card className="mb-5 border-2 border-income/40 bg-[#f1fbf4]">
         <div className="flex flex-col gap-5 md:flex-row md:items-center">
-          <Mascot mood={overview.count === 0 ? "wink" : overview.status === "exceeded" ? "worried" : overview.status === "normal" ? "excited" : "wink"} className="size-20 shrink-0 animate-float" />
+          {hasCharacter("aliens") ? <Character name="aliens" className="size-24 shrink-0 animate-float" /> : <ToyBlock letter="Rp" color="#3fae6f" className="size-16 shrink-0" />}
           <div className="flex-1">
             <p className="text-sm font-extrabold text-ink-soft capitalize">Total anggaran {formatMonthLabel(ym)}</p>
             {overview.count ? (
@@ -89,7 +90,7 @@ export default async function BudgetPage({ searchParams }: { searchParams: Promi
           ))}
         </div>
       ) : (
-        <EmptyState mood="wink" title="Yuk buat anggaran pertama" description="Contoh: Makanan & Minuman Rp1.000.000, Transportasi Rp500.000. Hanya pengeluaran di bulan ini yang dihitung.">
+        <EmptyState title="Yuk buat anggaran pertama" description="Contoh: Makanan & Minuman Rp1.000.000, Transportasi Rp500.000. Hanya pengeluaran di bulan ini yang dihitung.">
           {addButton}
         </EmptyState>
       )}

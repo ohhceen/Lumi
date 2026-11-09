@@ -5,10 +5,10 @@ import { BudgetRow } from "@/components/budget-row";
 import { CategoryDonut } from "@/components/charts/category-donut";
 import { DailySpendingChart } from "@/components/charts/daily-chart";
 import { IncomeExpenseChart } from "@/components/charts/income-expense-chart";
-import { StarField, Planet } from "@/components/decorations";
+import { StarField, Star } from "@/components/decorations";
+import { Character } from "@/components/character";
 import { EmptyState } from "@/components/empty-state";
 import { TransactionDialog } from "@/components/forms/transaction-dialog";
-import { Mascot } from "@/components/mascot";
 import { MonthPicker } from "@/components/month-picker";
 import { StatCard } from "@/components/stat-card";
 import { TransactionList } from "@/components/transaction-list";
@@ -46,26 +46,36 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
   const slices = categoryBreakdown(monthTx, categories, "expense");
   const daily = dailySeries(monthTx, ym);
   const trend = monthlyTrend(monthRows, ym, 6).map((m) => ({ label: formatShortMonth(m), income: m.income, expense: m.expense }));
-  const { mood, note } = moodFor(net, budget, monthTx.length > 0);
+  const { tone, note } = moodFor(net, budget, monthTx.length > 0);
   const isCurrent = ym.year === ctx.currentMonth.year && ym.month === ctx.currentMonth.month;
 
   return (
     <div className="space-y-5">
       {/* Hero */}
-      <section className="relative overflow-hidden rounded-3xl border border-secondary/30 bg-[radial-gradient(ellipse_at_top_left,rgb(142_197_247/0.35),transparent_60%),radial-gradient(ellipse_at_bottom_right,rgb(232_123_164/0.3),transparent_55%),linear-gradient(135deg,#2a2378,#3b2a8c_45%,#163a78)] p-5 text-ink shadow-pop sm:p-7">
+      <section className="sky-hero relative overflow-hidden rounded-3xl border-2 border-white p-5 pb-8 shadow-pop sm:p-7 sm:pb-10">
         <StarField />
-        <Planet className="absolute -right-3 -bottom-4 size-24 opacity-70 sm:right-40" />
-        <div className="relative flex flex-col gap-4 sm:flex-row sm:items-center">
-          <Mascot mood={mood} className="size-24 shrink-0 animate-float drop-shadow-lg sm:size-28" />
+        <div className="relative flex flex-col gap-4 md:flex-row md:items-end">
           <div className="flex-1">
-            <p className="text-sm font-extrabold text-ink-soft capitalize">{formatDateLong(ctx.today)}</p>
-            <h1 className="text-galaxy mt-0.5 text-2xl font-black sm:text-3xl">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <p className="text-sm font-extrabold text-ink-soft capitalize">{formatDateLong(ctx.today)}</p>
+              <MonthPicker value={ym} />
+            </div>
+            <h1 className="mt-2 text-2xl font-black text-ink sm:text-3xl">
               {greeting(hourInTimezone(ctx.timezone))}, {ctx.profile.name}! 👋
             </h1>
-            <p className="mt-1 text-sm font-bold text-ink-soft">{motivationalMessage(ctx.today)}</p>
-            <p className="mt-2 inline-flex rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-extrabold text-ink backdrop-blur">Bibo: {note}</p>
+            <p className="mt-1 max-w-xl text-sm font-bold text-ink-soft">{motivationalMessage(ctx.today)}</p>
+            <p
+              className={`mt-3 inline-flex items-center gap-1.5 rounded-full border-2 bg-white px-3 py-1 text-xs font-extrabold ${
+                tone === "alert" ? "border-expense text-expense-strong" : tone === "warning" ? "border-accent text-accent-strong" : "border-white text-primary-strong"
+              }`}
+            >
+              <Star className="size-3.5" /> {note}
+            </p>
           </div>
-          <MonthPicker value={ym} className="self-start sm:self-center" />
+          <div className="flex shrink-0 items-end justify-center gap-1 self-center md:self-end">
+            <Character name="woody" priority className="h-24 w-20 sm:h-40 sm:w-28" />
+            <Character name="buzz" priority className="h-24 w-20 sm:h-40 sm:w-28" />
+          </div>
         </div>
       </section>
 
@@ -94,7 +104,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
         />
         <StatCard
           label="Sisa Anggaran"
-          tone="secondary"
+          tone="accent"
           icon={PiggyBank}
           value={budget.count ? <span className={budget.remaining < 0 ? "text-expense-strong" : undefined}>{formatIDR(budget.remaining)}</span> : "—"}
           sub={
@@ -110,6 +120,21 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
       </section>
 
       <BudgetAlerts progress={progress} />
+
+      {tone === "great" && net > 0 ? (
+        <section aria-label="Pencapaian" className="flex items-center gap-3 rounded-3xl border-2 border-accent/70 bg-accent-soft px-4 py-3 shadow-soft">
+          <div className="flex shrink-0 -space-x-3">
+            <Character name="buzz" className="size-14" />
+            <Character name="woody" className="size-14" />
+          </div>
+          <Star className="size-6 shrink-0" />
+          <p className="text-sm font-bold text-ink">
+            <span className="font-black">Pencapaian bulan ini!</span> Kamu menyisihkan{" "}
+            <span className="tabular font-black text-income-strong">{formatIDR(net)}</span>
+            {budget.count && progress.every((p) => p.status === "normal") ? <> dan semua anggaran masih aman.</> : <>. Terus pertahankan!</>}
+          </p>
+        </section>
+      ) : null}
 
       {/* Charts */}
       <section className="grid gap-5 lg:grid-cols-5">
@@ -167,7 +192,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
           {recent.length ? (
             <TransactionList transactions={recent} categories={categories} today={ctx.today} />
           ) : (
-            <EmptyState title="Belum ada transaksi" description="Catat pemasukan atau pengeluaran pertamamu, Bibo siap membantu!">
+            <EmptyState title="Belum ada transaksi" description="Catat pemasukan atau pengeluaran pertamamu, yuk mulai petualangannya!">
               <TransactionDialog
                 categories={categories}
                 defaultDate={ctx.today}
@@ -199,7 +224,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
               ))}
             </div>
           ) : (
-            <EmptyState mood="wink" title="Belum ada anggaran" description="Atur batas belanja per kategori supaya pengeluaran tetap terkendali.">
+            <EmptyState title="Belum ada anggaran" description="Atur batas belanja per kategori supaya pengeluaran tetap terkendali.">
               <Button asChild variant="secondary">
                 <Link href={`/budget?month=${range.start.slice(0, 7)}`}>Atur anggaran</Link>
               </Button>

@@ -76,7 +76,7 @@ export function TransactionForm({
             onClick={() => switchType(v)}
             className={cn(
               "flex h-11 items-center justify-center gap-2 rounded-xl text-sm font-extrabold transition-all",
-              type === v ? on : "text-ink-soft hover:bg-white/5",
+              type === v ? on : "text-ink-soft hover:bg-white",
             )}
           >
             <Icon className="size-4" /> {label}

@@ -8,13 +8,13 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        primary: "bg-gradient-to-r from-[#4f86ea] to-[#8b6cf0] text-white shadow-glow hover:brightness-110 hover:-translate-y-0.5",
-        secondary: "bg-secondary-soft text-secondary-strong ring-1 ring-secondary/30 hover:bg-secondary/25",
-        income: "bg-btn-income text-white shadow-[0_0_20px_-6px_rgb(35_149_95/0.9)] hover:brightness-110 hover:-translate-y-0.5",
-        expense: "bg-btn-expense text-white shadow-[0_0_20px_-6px_rgb(212_82_79/0.9)] hover:brightness-110 hover:-translate-y-0.5",
-        outline: "border-2 border-line bg-white/5 text-ink backdrop-blur hover:border-primary/60 hover:bg-primary-soft",
-        ghost: "text-ink-soft hover:bg-white/10 hover:text-ink",
-        danger: "bg-btn-expense text-white hover:brightness-110",
+        primary: "bg-primary-strong text-white shadow-glow hover:-translate-y-0.5 hover:bg-[#2479c2] active:shadow-none",
+        secondary: "bg-accent-soft text-accent-strong ring-1 ring-accent/60 hover:bg-accent/40",
+        income: "bg-btn-income text-white shadow-[0_4px_0_0_#155f38] hover:-translate-y-0.5 hover:brightness-105 active:shadow-none",
+        expense: "bg-btn-expense text-white shadow-[0_4px_0_0_#962c23] hover:-translate-y-0.5 hover:brightness-105 active:shadow-none",
+        outline: "border-2 border-line bg-white text-ink hover:border-primary hover:bg-primary-soft",
+        ghost: "text-ink-soft hover:bg-primary-soft hover:text-primary-strong",
+        danger: "bg-btn-expense text-white shadow-[0_4px_0_0_#962c23] hover:brightness-105 active:shadow-none",
       },
       size: {
         sm: "h-9 px-3 text-sm",

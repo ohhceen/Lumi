@@ -217,3 +217,24 @@ test("reports export Excel and PDF for the selected period", async ({ page }) =>
   const fs = await import("node:fs");
   expect(fs.readFileSync(await pdf.path()).subarray(0, 4).toString()).toBe("%PDF");
 });
+
+test("income and expenses pages only list their own type", async ({ page }) => {
+  await addTransaction(page, { type: "income", amount: "1000000", description: "Honor proyek", category: "Freelance" });
+  await addTransaction(page, { type: "expense", amount: "35000", description: "Es kopi", category: FOOD });
+
+  await page.goto("/income");
+  await expect(page.getByRole("heading", { name: "Pemasukan", level: 1 })).toBeVisible();
+  await expect(page.locator("table")).toContainText("Honor proyek");
+  await expect(page.locator("table")).not.toContainText("Es kopi");
+
+  await page.goto("/expenses");
+  await expect(page.getByRole("heading", { name: "Pengeluaran", level: 1 })).toBeVisible();
+  await expect(page.locator("table")).toContainText("Es kopi");
+  await expect(page.locator("table")).not.toContainText("Honor proyek");
+
+  // tabs switch between the three views
+  await page.getByRole("navigation", { name: "Jenis transaksi" }).getByRole("link", { name: "Semua" }).click();
+  await expect(page).toHaveURL(/\/transactions$/);
+  await expect(page.locator("table")).toContainText("Honor proyek");
+  await expect(page.locator("table")).toContainText("Es kopi");
+});

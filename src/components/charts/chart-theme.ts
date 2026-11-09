@@ -1,28 +1,29 @@
-// Chart colours for the dark "galaxy" theme, validated with the dataviz
-// palette validator against the card surface (#1b1940, dark mode):
-// - income/expense pair: lightness band, chroma, CVD (ΔE 9.3), normal-vision
-//   and contrast (>= 3:1) all pass.
-// - categorical: the validated dark-mode reference order, all checks pass.
+// Chart colours for the light Toy Story theme, validated with the dataviz
+// palette validator in light mode:
+// - income/expense pair (#17825d / #f28b6e): lightness band, chroma,
+//   CVD (ΔE 11.3) and normal-vision checks pass. The coral is < 3:1 against
+//   white, so every chart has a legend, tooltips and the exact numbers nearby.
+// - categorical: the validated light-mode reference order.
 export const SERIES = {
-  income: "#1baf7a",
-  expense: "#d95926",
-  net: "#3987e5",
+  income: "#17825d",
+  expense: "#f28b6e",
+  net: "#2a78d6",
 } as const;
 
 // Fixed categorical order (never cycled). 7th+ categories fold into "Lainnya".
-export const CATEGORICAL = ["#3987e5", "#d95926", "#199e70", "#c98500", "#d55181", "#9085e9"] as const;
-export const OTHER_COLOR = "#6b7096";
+export const CATEGORICAL = ["#2a78d6", "#eb6834", "#1baf7a", "#eda100", "#e87ba4", "#6250d6"] as const;
+export const OTHER_COLOR = "#a3abb8";
 
-export const SURFACE = "#1d1a4a"; // gap/ring colour between marks
+export const SURFACE = "#ffffff"; // gap/ring colour between marks
 
 export const AXIS = {
-  stroke: "#8a8fc0",
-  fill: "#8a8fc0",
+  stroke: "#74839a",
+  fill: "#74839a",
   fontSize: 11,
   fontWeight: 500,
   fontFamily: "var(--font-poppins), sans-serif",
 } as const;
 
-export const GRID = "rgb(170 160 255 / 0.14)";
-export const CURSOR_FILL = "rgb(200 181 245 / 0.10)";
-export const MUTED_LINE = "#b9bde6";
+export const GRID = "#e3edf7";
+export const CURSOR_FILL = "rgb(90 176 234 / 0.12)";
+export const MUTED_LINE = "#4e5f78";

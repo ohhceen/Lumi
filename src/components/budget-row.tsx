@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 export function BudgetRow({ p, compact = false, actions }: { p: BudgetProgress; compact?: boolean; actions?: React.ReactNode }) {
   const st = statusStyles[p.status];
   return (
-    <div className={cn(!compact && "glass rounded-3xl border border-line p-4 shadow-soft sm:p-5")}>
+    <div className={cn(!compact && "rounded-3xl border border-line bg-card p-4 shadow-soft sm:p-5")}>
       <div className="flex items-center gap-3">
         <CategoryIcon icon={p.categoryIcon} type="expense" size={compact ? "sm" : "md"} />
         <div className="min-w-0 flex-1">

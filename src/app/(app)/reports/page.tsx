@@ -80,7 +80,7 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
 
   return (
     <div className="space-y-5">
-      <PageHeader title="Laporan & Analisis" description="Pahami kebiasaan keuanganmu lewat angka dan grafik.">
+      <PageHeader title="Laporan & Analisis" description="Pahami kebiasaan keuanganmu lewat angka dan grafik." character="hamm">
         <MonthPicker value={ym} />
         <ReportExport data={exportData} />
       </PageHeader>

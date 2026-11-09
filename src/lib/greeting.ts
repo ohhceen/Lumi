@@ -1,4 +1,3 @@
-import type { MascotMood } from "@/components/mascot";
 import type { BudgetOverview } from "./finance";
 
 export function greeting(hour: number): string {
@@ -13,7 +12,7 @@ const MESSAGES = [
   "Catatan kecil hari ini, tabungan besar nanti. ✨",
   "Setiap Rupiah yang tercatat adalah langkah menuju tujuanmu! 🚀",
   "Hemat bukan pelit — kamu sedang berinvestasi untuk dirimu sendiri. 💙",
-  "Bibo bangga kamu rajin mencatat! Terus pertahankan ya. 🌟",
+  "Ke tak terhingga dan melampauinya: satu catatan kecil hari ini! 🚀",
   "Anggaran itu peta, bukan penjara. Jelajahi dengan bijak! 🗺️",
   "Kopi hari ini atau liburan bulan depan? Kamu yang pilih! ☕",
   "Uang yang terencana selalu lebih tenang. 🌙",
@@ -24,11 +23,13 @@ export function motivationalMessage(today: string): string {
   return MESSAGES[n % MESSAGES.length];
 }
 
-/** Mascot mood reacting to the month's financial condition. */
-export function moodFor(net: number, budget: BudgetOverview, hasTransactions: boolean): { mood: MascotMood; note: string } {
-  if (!hasTransactions) return { mood: "sleepy", note: "Belum ada transaksi bulan ini. Yuk mulai catat!" };
-  if (budget.count > 0 && budget.status === "exceeded") return { mood: "worried", note: "Total anggaran bulan ini sudah terlewati." };
-  if (net < 0) return { mood: "worried", note: "Pengeluaran bulan ini lebih besar dari pemasukan." };
-  if (budget.count > 0 && (budget.status === "danger" || budget.status === "warning")) return { mood: "wink", note: "Anggaran mulai menipis, tetap waspada ya." };
-  return { mood: "excited", note: "Keuanganmu bulan ini sehat. Mantap!" };
+export type MonthTone = "idle" | "great" | "warning" | "alert";
+
+/** One-line status of the selected month, used in the dashboard hero. */
+export function moodFor(net: number, budget: BudgetOverview, hasTransactions: boolean): { tone: MonthTone; note: string } {
+  if (!hasTransactions) return { tone: "idle", note: "Belum ada transaksi bulan ini. Yuk mulai catat!" };
+  if (budget.count > 0 && budget.status === "exceeded") return { tone: "alert", note: "Total anggaran bulan ini sudah terlewati." };
+  if (net < 0) return { tone: "alert", note: "Pengeluaran bulan ini lebih besar dari pemasukan." };
+  if (budget.count > 0 && (budget.status === "danger" || budget.status === "warning")) return { tone: "warning", note: "Anggaran mulai menipis, tetap waspada ya." };
+  return { tone: "great", note: "Keuanganmu bulan ini sehat. Mantap!" };
 }

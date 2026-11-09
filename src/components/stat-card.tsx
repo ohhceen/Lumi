@@ -29,8 +29,8 @@ export function StatCard({
   return (
     <div
       className={cn(
-        "glass relative overflow-hidden rounded-3xl border border-line p-5 shadow-soft transition-transform duration-200 hover:-translate-y-0.5 animate-pop-in",
-        highlight && "border-secondary/50 bg-gradient-to-br from-[#3a2f8f]/70 via-[#1e1b4a]/70 to-[#1b3a72]/70 shadow-pop",
+        "relative overflow-hidden rounded-3xl border border-line bg-card p-5 shadow-soft transition-transform duration-200 hover:-translate-y-0.5 animate-pop-in",
+        highlight && "border-primary/50 bg-primary-soft shadow-pop",
         className,
       )}
     >

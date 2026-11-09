@@ -1,6 +1,6 @@
 import { LogOut } from "lucide-react";
 import { SettingsForm } from "@/components/forms/settings-form";
-import { Mascot } from "@/components/mascot";
+import { LogoMark } from "@/components/brand";
 import { PageHeader } from "@/components/page-header";
 import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -13,7 +13,7 @@ export default async function SettingsPage() {
   const [ctx, totals] = await Promise.all([getAppContext(), getTotals()]);
   return (
     <div>
-      <PageHeader title="Pengaturan" description="Atur saldo awal, zona waktu, dan profilmu." />
+      <PageHeader title="Pengaturan" description="Atur saldo awal, zona waktu, dan profilmu." character="jessie" />
       <div className="grid gap-5 lg:grid-cols-3">
         <Card className="lg:col-span-2">
           <CardHeader>
@@ -26,7 +26,7 @@ export default async function SettingsPage() {
         </Card>
         <div className="space-y-5">
           <Card className="flex flex-col items-center text-center">
-            <Mascot mood="wink" className="size-24 animate-float" />
+            <LogoMark className="size-16" />
             <p className="mt-3 font-black">Akun</p>
             <p className="text-sm font-semibold break-all text-ink-soft">{ctx.user.email}</p>
             <p className="mt-2 text-xs font-bold text-ink-faint">Mata uang: Rupiah (IDR)</p>

@@ -22,8 +22,8 @@ export function MonthPicker({ value, param = "month", className }: { value: Year
   };
 
   return (
-    <div className={cn("inline-flex items-center gap-1 glass rounded-2xl border-2 border-line p-1 shadow-soft", pending && "opacity-70", className)}>
-      <button type="button" aria-label="Bulan sebelumnya" onClick={() => go(shiftMonth(value, -1))} className="rounded-xl p-2 text-ink-soft hover:bg-white/10 hover:text-ink">
+    <div className={cn("inline-flex items-center gap-1 rounded-2xl border-2 border-line bg-white p-1 shadow-soft", pending && "opacity-70", className)}>
+      <button type="button" aria-label="Bulan sebelumnya" onClick={() => go(shiftMonth(value, -1))} className="rounded-xl p-2 text-ink-soft hover:bg-primary-soft hover:text-primary-strong">
         <ChevronLeft className="size-4" />
       </button>
       <label className="relative cursor-pointer px-2 text-sm font-black text-ink capitalize">
@@ -39,7 +39,7 @@ export function MonthPicker({ value, param = "month", className }: { value: Year
           }}
         />
       </label>
-      <button type="button" aria-label="Bulan berikutnya" onClick={() => go(shiftMonth(value, 1))} className="rounded-xl p-2 text-ink-soft hover:bg-white/10 hover:text-ink">
+      <button type="button" aria-label="Bulan berikutnya" onClick={() => go(shiftMonth(value, 1))} className="rounded-xl p-2 text-ink-soft hover:bg-primary-soft hover:text-primary-strong">
         <ChevronRight className="size-4" />
       </button>
     </div>

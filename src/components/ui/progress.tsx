@@ -17,10 +17,10 @@ export function ProgressBar({ value, status, className, label }: { value: number
       aria-valuemin={0}
       aria-valuemax={100}
       aria-valuenow={Math.round(value)}
-      className={cn("h-3 w-full overflow-hidden rounded-full bg-black/30 ring-1 ring-line", className)}
+      className={cn("h-3 w-full overflow-hidden rounded-full bg-primary-soft ring-1 ring-line", className)}
     >
       <div
-        className={cn("h-full rounded-full shadow-[0_0_12px_-2px_currentColor] transition-[width] duration-700 ease-out", statusStyles[status].bar)}
+        className={cn("h-full rounded-full transition-[width] duration-700 ease-out", statusStyles[status].bar)}
         style={{ width: `${width}%` }}
       />
     </div>

@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { Mascot } from "@/components/mascot";
+import { LogoMark } from "@/components/brand";
 import { getSupabaseConfig } from "@/lib/supabase/config";
 
 export const metadata = { title: "Setup" };
@@ -9,10 +9,10 @@ export default function SetupPage() {
   if (getSupabaseConfig()) redirect("/");
   return (
     <main className="bg-space flex min-h-dvh items-center justify-center px-4 py-10">
-      <div className="w-full max-w-lg glass rounded-3xl border border-line p-7 shadow-pop">
-        <Mascot mood="worried" className="mx-auto size-24" />
+      <div className="w-full max-w-lg rounded-3xl border-2 border-white bg-card p-7 shadow-pop">
+        <LogoMark className="mx-auto size-16" />
         <h1 className="mt-3 text-center text-2xl font-black">Supabase belum terhubung</h1>
-        <p className="mt-2 text-center text-sm font-semibold text-ink-soft">Bibo butuh database untuk menyimpan catatanmu. Ikuti langkah berikut:</p>
+        <p className="mt-2 text-center text-sm font-semibold text-ink-soft">Aplikasi ini butuh database untuk menyimpan catatanmu. Ikuti langkah berikut:</p>
         <ol className="mt-5 list-decimal space-y-2 pl-5 text-sm font-semibold text-ink">
           <li>Buat project di supabase.com lalu jalankan file SQL di <code className="rounded bg-cream px-1">supabase/migrations</code>.</li>
           <li>Salin <code className="rounded bg-cream px-1">.env.example</code> menjadi <code className="rounded bg-cream px-1">.env.local</code>.</li>
