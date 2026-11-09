@@ -34,9 +34,7 @@ export function Sidebar({ name, children }: { name: string; children?: React.Rea
       <Link href="/" className="group mb-8 flex items-center gap-3 px-2">
         <LogoMark className="size-11 transition-transform group-hover:-rotate-6" />
         <div>
-          <p className="text-base leading-none font-black whitespace-nowrap text-ink">
-            MyMoney <span className="text-primary-strong">Buddy</span>
-          </p>
+          <p className="text-xl leading-none font-black whitespace-nowrap text-primary-strong">Lumi</p>
           <p className="mt-1 text-xs font-bold text-ink-faint">Teman keuanganmu</p>
         </div>
       </Link>
@@ -72,9 +70,7 @@ export function MobileTopBar({ children }: { children?: React.ReactNode }) {
     <header className="sticky top-0 z-30 flex items-center justify-between border-b border-line bg-white/90 px-4 py-3 backdrop-blur lg:hidden">
       <Link href="/" className="flex items-center gap-2">
         <LogoMark className="size-9" />
-        <span className="text-base font-black text-ink">
-          MyMoney <span className="text-primary-strong">Buddy</span>
-        </span>
+        <span className="text-lg font-black text-primary-strong">Lumi</span>
       </Link>
       {children}
     </header>

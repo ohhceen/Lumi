@@ -204,7 +204,7 @@ test("reports export Excel and PDF for the selected period", async ({ page }) =>
   await expect(page.getByRole("heading", { name: /Laporan Harian/ })).toBeVisible();
 
   const [xlsx] = await Promise.all([page.waitForEvent("download"), page.getByRole("button", { name: "Excel" }).click()]);
-  expect(xlsx.suggestedFilename()).toBe(`laporan-mymoney-buddy-${yearMonthKey(thisMonth)}.xlsx`);
+  expect(xlsx.suggestedFilename()).toBe(`laporan-lumi-${yearMonthKey(thisMonth)}.xlsx`);
   const xlsxPath = await xlsx.path();
   const ExcelJS = (await import("exceljs")).default;
   const wb = new ExcelJS.Workbook();
@@ -213,7 +213,7 @@ test("reports export Excel and PDF for the selected period", async ({ page }) =>
   expect(rows).toBe(2);
 
   const [pdf] = await Promise.all([page.waitForEvent("download"), page.getByRole("button", { name: "PDF" }).click()]);
-  expect(pdf.suggestedFilename()).toBe(`laporan-mymoney-buddy-${yearMonthKey(thisMonth)}.pdf`);
+  expect(pdf.suggestedFilename()).toBe(`laporan-lumi-${yearMonthKey(thisMonth)}.pdf`);
   const fs = await import("node:fs");
   expect(fs.readFileSync(await pdf.path()).subarray(0, 4).toString()).toBe("%PDF");
 });

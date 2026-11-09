@@ -15,9 +15,7 @@ export default function LoginPage() {
       <div className="relative w-full max-w-sm animate-pop-in rounded-3xl border-2 border-white bg-card p-7 shadow-pop">
         <div className="mb-6 flex flex-col items-center text-center">
           {hasCharacter("lotso") ? <Character name="lotso" priority className="size-28" /> : <LogoMark className="size-16" />}
-          <h1 className="mt-3 text-2xl font-black text-ink">
-            MyMoney <span className="text-primary-strong">Buddy</span>
-          </h1>
+          <h1 className="mt-3 text-3xl font-black text-primary-strong">Lumi</h1>
           <p className="mt-1 text-sm font-semibold text-ink-soft">Halo lagi! Siap mencatat hari ini? ⭐</p>
         </div>
         <LoginForm />

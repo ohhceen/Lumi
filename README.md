@@ -1,4 +1,4 @@
-# MyMoney Buddy 💙
+# Lumi ⭐
 
 A cute, private personal-finance tracker for one person: record income and expenses, see your one main balance, set monthly budgets per category, and understand your habits with daily/monthly reports. The UI is in Indonesian, amounts are in Rupiah, with a light, Toy Story-inspired theme.
 

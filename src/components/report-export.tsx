@@ -30,7 +30,7 @@ function download(blob: Blob, name: string) {
 async function exportExcel(d: ExportData) {
   const ExcelJS = (await import("exceljs")).default;
   const wb = new ExcelJS.Workbook();
-  wb.creator = "MyMoney Buddy";
+  wb.creator = "Lumi";
   const money = '"Rp"#,##0;-"Rp"#,##0';
   const header = (ws: import("exceljs").Worksheet) => {
     const row = ws.getRow(1);
@@ -91,7 +91,7 @@ async function exportPdf(d: ExportData) {
   doc.setFont("helvetica", "bold");
   doc.setFontSize(18);
   doc.setTextColor(...ink);
-  doc.text("MyMoney Buddy — Laporan Keuangan", 40, 50);
+  doc.text("Lumi — Laporan Keuangan", 40, 50);
   doc.setFont("helvetica", "normal");
   doc.setFontSize(11);
   doc.text(`Periode: ${d.periodLabel}`, 40, 70);

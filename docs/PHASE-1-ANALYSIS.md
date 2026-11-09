@@ -1,4 +1,4 @@
-# MyMoney Buddy — Phase 1: Requirement Analysis & Architecture
+# Lumi (formerly MyMoney Buddy) — Phase 1: Requirement Analysis & Architecture
 
 ## 1. What we are building (summary)
 

@@ -6,7 +6,7 @@ import "./globals.css";
 const poppins = Poppins({ subsets: ["latin"], variable: "--font-poppins", weight: ["400", "500", "600", "700"], display: "swap" });
 
 export const metadata: Metadata = {
-  title: { default: "MyMoney Buddy", template: "%s · MyMoney Buddy" },
+  title: { default: "Lumi", template: "%s · Lumi" },
   description: "Teman kecilmu untuk mencatat pemasukan, pengeluaran, dan anggaran bulanan.",
 };
 

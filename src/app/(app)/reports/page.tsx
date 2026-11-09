@@ -51,7 +51,7 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
 
   const exportData: ExportData = {
     periodLabel,
-    fileStem: `laporan-mymoney-buddy-${range.start.slice(0, 7)}`,
+    fileStem: `laporan-lumi-${range.start.slice(0, 7)}`,
     generatedAt: new Intl.DateTimeFormat("id-ID", { dateStyle: "long", timeStyle: "short", timeZone: ctx.timezone }).format(new Date()),
     summary: [
       { label: "Total pemasukan", value: formatIDR(report.income) },
