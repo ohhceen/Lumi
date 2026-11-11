@@ -59,3 +59,45 @@ export interface YearMonth {
 export type ActionResult<T = undefined> =
   | { ok: true; message: string; data?: T }
   | { ok: false; message: string; fieldErrors?: Record<string, string[]> };
+
+export interface Bill {
+  id: string;
+  name: string;
+  amount: number;
+  due_day: number;
+  category_id: string;
+  notes: string | null;
+  active: boolean;
+  created_at: string;
+}
+
+export interface BillPayment {
+  id: string;
+  bill_id: string;
+  year: number;
+  month: number;
+  amount: number;
+  paid_on: string;
+  transaction_id: string | null;
+}
+
+export interface Installment {
+  id: string;
+  name: string;
+  monthly_amount: number;
+  tenor: number;
+  start_month: string;
+  due_day: number;
+  paid_before: number;
+  category_id: string;
+  notes: string | null;
+  created_at: string;
+}
+
+export interface InstallmentPayment {
+  id: string;
+  installment_id: string;
+  amount: number;
+  paid_on: string;
+  transaction_id: string | null;
+}

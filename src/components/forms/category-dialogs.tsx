@@ -105,14 +105,20 @@ export function CategoryDialog({
   );
 }
 
-export function CategoryActions({ category, usage, siblings }: { category: Category; usage: number; siblings: Category[] }) {
+export function CategoryActions({ category, usage, siblings }: { category: Category; usage: { transactions: number; bills: number; installments: number }; siblings: Category[] }) {
   const [target, setTarget] = React.useState("");
-  const needsTarget = usage > 0;
+  const total = usage.transactions + usage.bills + usage.installments;
+  const needsTarget = total > 0;
+  const usedBy = [
+    usage.transactions ? `${usage.transactions} transaksi` : null,
+    usage.bills ? `${usage.bills} tagihan` : null,
+    usage.installments ? `${usage.installments} cicilan` : null,
+  ].filter(Boolean).join(", ");
   return (
     <div className="flex shrink-0 gap-0.5">
       <CategoryDialog
         category={category}
-        locked={usage > 0}
+        locked={total > 0}
         trigger={
           <Button variant="ghost" size="icon" className="size-8" aria-label={`Edit kategori ${category.name}`}>
             <Pencil />
@@ -124,7 +130,7 @@ export function CategoryActions({ category, usage, siblings }: { category: Categ
         confirmLabel={needsTarget ? "Pindahkan & hapus" : "Ya, hapus"}
         description={
           needsTarget ? (
-            <>Kategori ini dipakai <b className="text-ink">{usage} transaksi</b>. Pilih kategori pengganti — semua transaksinya akan dipindahkan, saldo tidak berubah. Anggaran kategori ini ikut dihapus.</>
+            <>Kategori ini dipakai <b className="text-ink">{usedBy}</b>. Pilih kategori pengganti — semuanya akan dipindahkan ke sana, saldo tidak berubah. Anggaran kategori ini ikut dihapus.</>
           ) : (
             <>Kategori ini belum dipakai transaksi. Anggaran kategori ini (jika ada) ikut dihapus.</>
           )

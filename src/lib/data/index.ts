@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { currentYearMonth, DEFAULT_TIMEZONE, todayInTimezone } from "@/lib/dates";
 import { filtersToDateRange, PAGE_SIZE } from "@/lib/filters";
 import type { MonthTotalRow, Totals } from "@/lib/finance";
-import type { Budget, Category, Profile, Settings, TransactionWithCategory, Transaction, YearMonth } from "@/lib/types";
+import type { Bill, BillPayment, Budget, Category, Installment, InstallmentPayment, Profile, Settings, TransactionWithCategory, Transaction, YearMonth } from "@/lib/types";
 import type { TransactionFilters } from "@/lib/validation";
 
 class DataError extends Error {
@@ -63,11 +63,22 @@ export const getCategories = cache(async (): Promise<Category[]> => {
   return data as Category[];
 });
 
-export async function getCategoryUsage(): Promise<Map<string, number>> {
+export interface CategoryUsage {
+  transactions: number;
+  bills: number;
+  installments: number;
+}
+
+export async function getCategoryUsage(): Promise<Map<string, CategoryUsage>> {
   const { supabase } = await getSession();
   const { data, error } = await supabase.rpc("category_usage");
   if (error) throw new DataError("pemakaian kategori", error);
-  return new Map((data as { category_id: string; transaction_count: number }[]).map((r) => [r.category_id, num(r.transaction_count)]));
+  return new Map(
+    (data as { category_id: string; transaction_count: number; bill_count: number; installment_count: number }[]).map((r) => [
+      r.category_id,
+      { transactions: num(r.transaction_count), bills: num(r.bill_count), installments: num(r.installment_count) },
+    ]),
+  );
 }
 
 /** All transactions with transaction_date in [start, end). */
@@ -135,4 +146,32 @@ export async function getRecentTransactions(limit = 6): Promise<TransactionWithC
   const { data, error } = await supabase.rpc("search_transactions", { p_limit: limit });
   if (error) throw new DataError("transaksi terbaru", error);
   return (data as TransactionWithCategory[]).map((r) => ({ ...r, amount: num(r.amount) }));
+}
+
+export async function getBills(): Promise<Bill[]> {
+  const { supabase } = await getSession();
+  const { data, error } = await supabase.from("bills").select("*").order("due_day").order("name");
+  if (error) throw new DataError("tagihan", error);
+  return (data as Bill[]).map((b) => ({ ...b, amount: num(b.amount) }));
+}
+
+export async function getBillPayments(ym: YearMonth): Promise<BillPayment[]> {
+  const { supabase } = await getSession();
+  const { data, error } = await supabase.from("bill_payments").select("*").eq("year", ym.year).eq("month", ym.month);
+  if (error) throw new DataError("pembayaran tagihan", error);
+  return (data as BillPayment[]).map((p) => ({ ...p, amount: num(p.amount) }));
+}
+
+export async function getInstallments(): Promise<(Installment & { payments: InstallmentPayment[] })[]> {
+  const { supabase } = await getSession();
+  const { data, error } = await supabase
+    .from("installments")
+    .select("*, payments:installment_payments(id, installment_id, amount, paid_on, transaction_id)")
+    .order("created_at");
+  if (error) throw new DataError("cicilan", error);
+  return (data as (Installment & { payments: InstallmentPayment[] })[]).map((i) => ({
+    ...i,
+    monthly_amount: num(i.monthly_amount),
+    payments: [...i.payments].map((p) => ({ ...p, amount: num(p.amount) })).sort((a, b) => a.paid_on.localeCompare(b.paid_on)),
+  }));
 }

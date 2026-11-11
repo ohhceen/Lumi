@@ -6,7 +6,7 @@ import { LogOut } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { LogoMark } from "@/components/brand";
 import { logout } from "@/app/actions/auth";
-import { NAV_ITEMS, TRANSACTION_SUB_ITEMS, isActive } from "./nav-items";
+import { MOBILE_NAV_ITEMS, NAV_ITEMS, TRANSACTION_SUB_ITEMS, isActive } from "./nav-items";
 
 function NavLink({ href, label, icon: Icon, active, sub = false }: { href: string; label: string; icon: React.ElementType; active: boolean; sub?: boolean }) {
   return (
@@ -80,9 +80,8 @@ export function BottomNav() {
   return (
     <nav aria-label="Navigasi utama" className="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-white pb-[env(safe-area-inset-bottom)] lg:hidden">
       <ul className="mx-auto grid max-w-lg grid-cols-6">
-        {NAV_ITEMS.map(({ href, short, icon: Icon }) => {
-          // income/expenses pages belong to the Transaksi tab
-          const active = isActive(pathname, href) || (href === "/transactions" && TRANSACTION_SUB_ITEMS.some((s) => isActive(pathname, s.href)));
+        {MOBILE_NAV_ITEMS.map(({ href, short, icon: Icon, also }) => {
+          const active = isActive(pathname, href) || also.some((p) => isActive(pathname, p));
           return (
             <li key={href}>
               <Link

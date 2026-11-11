@@ -53,10 +53,17 @@ export async function deleteCategory(id: string, reassignTo?: string | null): Pr
     return { ok: true, message: `Kategori dihapus. ${Number(data ?? 0)} transaksi dipindahkan.` };
   }
 
-  const { count, error: countError } = await supabase.from("transactions").select("id", { count: "exact", head: true }).eq("category_id", id);
+  const counts = await Promise.all(
+    (["transactions", "bills", "installments"] as const).map((table) =>
+      supabase.from(table).select("id", { count: "exact", head: true }).eq("category_id", id),
+    ),
+  );
+  const countError = counts.find((c) => c.error)?.error;
   if (countError) return { ok: false, message: friendlyDbError(countError) };
-  if ((count ?? 0) > 0) {
-    return { ok: false, message: `Kategori ini masih dipakai oleh ${count} transaksi. Pilih kategori pengganti dulu ya.` };
+  const [tx, bills, inst] = counts.map((c) => c.count ?? 0);
+  if (tx + bills + inst > 0) {
+    const what = [tx ? `${tx} transaksi` : null, bills ? `${bills} tagihan` : null, inst ? `${inst} cicilan` : null].filter(Boolean).join(", ");
+    return { ok: false, message: `Kategori ini masih dipakai oleh ${what}. Pilih kategori pengganti dulu ya.` };
   }
   const { data, error } = await supabase.from("categories").delete().eq("id", id).select("id");
   if (error) return { ok: false, message: friendlyDbError(error, "Kategori gagal dihapus.") };

@@ -5,7 +5,7 @@ import { CategoryActions, CategoryDialog } from "@/components/forms/category-dia
 import { PageHeader } from "@/components/page-header";
 import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { getCategories, getCategoryUsage } from "@/lib/data";
+import { getCategories, getCategoryUsage, type CategoryUsage } from "@/lib/data";
 import type { Category, TransactionType } from "@/lib/types";
 
 export const metadata = { title: "Kategori" };
@@ -23,7 +23,7 @@ export default async function CategoriesPage() {
   );
 }
 
-function Column({ type, categories, usage }: { type: TransactionType; categories: Category[]; usage: Map<string, number> }) {
+function Column({ type, categories, usage }: { type: TransactionType; categories: Category[]; usage: Map<string, CategoryUsage> }) {
   const list = categories.filter((c) => c.type === type);
   const income = type === "income";
   return (
@@ -41,15 +41,20 @@ function Column({ type, categories, usage }: { type: TransactionType; categories
       {list.length ? (
         <ul className="divide-y divide-line/70">
           {list.map((c) => {
-            const n = usage.get(c.id) ?? 0;
+            const u = usage.get(c.id) ?? { transactions: 0, bills: 0, installments: 0 };
+            const parts = [
+              u.transactions ? `${u.transactions} transaksi` : null,
+              u.bills ? `${u.bills} tagihan` : null,
+              u.installments ? `${u.installments} cicilan` : null,
+            ].filter(Boolean);
             return (
               <li key={c.id} className="flex items-center gap-3 py-2.5">
                 <CategoryIcon icon={c.icon} type={c.type} />
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-extrabold">{c.name}</p>
-                  <p className="text-xs font-semibold text-ink-faint">{n ? `${n} transaksi` : "Belum dipakai"}</p>
+                  <p className="text-xs font-semibold text-ink-faint">{parts.length ? parts.join(" · ") : "Belum dipakai"}</p>
                 </div>
-                <CategoryActions category={c} usage={n} siblings={list.filter((x) => x.id !== c.id)} />
+                <CategoryActions category={c} usage={u} siblings={list.filter((x) => x.id !== c.id)} />
               </li>
             );
           })}

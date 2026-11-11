@@ -9,14 +9,16 @@ import { EmptyState } from "@/components/empty-state";
 import { TransactionDialog } from "@/components/forms/transaction-dialog";
 import { MonthPicker } from "@/components/month-picker";
 import { QuickAdd } from "@/components/quick-add";
+import { UpcomingCard } from "@/components/upcoming-card";
 import { StatCard } from "@/components/stat-card";
 import { TransactionList } from "@/components/transaction-list";
 import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { getAppContext, getBudgets, getCategories, getMonthlyTotals, getRecentTransactions, getTotals, getTransactionsInRange } from "@/lib/data";
+import { getAppContext, getBillPayments, getBills, getBudgets, getCategories, getInstallments, getMonthlyTotals, getRecentTransactions, getTotals, getTransactionsInRange } from "@/lib/data";
 import { formatDateLong, formatMonthLabel, formatShortMonth, hourInTimezone, monthRange, parseYearMonth, shiftMonth } from "@/lib/dates";
 import { buildBudgetProgress, categoryBreakdown, computeBalance, dailySeries, monthlyTrend, sumTotals, summarizeBudgets } from "@/lib/finance";
 import { formatIDR, formatPercent } from "@/lib/format";
+import { billsForMonth, installmentProgress, upcomingObligations } from "@/lib/obligations";
 import { greeting, moodFor, motivationalMessage } from "@/lib/greeting";
 import { cn } from "@/lib/utils";
 
@@ -29,14 +31,24 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
   const range = monthRange(ym);
   const trendStart = monthRange(shiftMonth(ym, -5)).start;
 
-  const [categories, allTotals, monthTx, budgets, monthRows, recent] = await Promise.all([
+  const [categories, allTotals, monthTx, budgets, monthRows, recent, bills, billPayments, installments] = await Promise.all([
     getCategories(),
     getTotals(),
     getTransactionsInRange(range.start, range.end),
     getBudgets(ym),
     getMonthlyTotals(trendStart, range.end),
     getRecentTransactions(6),
+    getBills(),
+    getBillPayments(ctx.currentMonth),
+    getInstallments(),
   ]);
+  // "Jatuh tempo minggu ini" is always about today, whatever month is selected.
+  const hasObligations = bills.length > 0 || installments.length > 0;
+  const upcoming = upcomingObligations(
+    billsForMonth(bills, billPayments, ctx.currentMonth, ctx.today),
+    installments.map((inst) => ({ inst, progress: installmentProgress(inst, inst.payments, ctx.today) })),
+    ctx.today,
+  );
 
   const balance = computeBalance(ctx.settings.initial_balance, allTotals);
   const month = sumTotals(monthTx);
@@ -118,6 +130,8 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
       </section>
 
       <BudgetAlerts progress={progress} />
+
+      {hasObligations ? <UpcomingCard items={upcoming} /> : null}
 
       {tone === "great" && net > 0 ? (
         <section aria-label="Pencapaian" className="flex items-center gap-3 rounded-3xl bg-card px-4 py-3 shadow-soft">

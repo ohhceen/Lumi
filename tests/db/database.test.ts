@@ -182,6 +182,94 @@ describe.skipIf(!available)("database (real migrations)", () => {
     });
   });
 
+  describe("bills & installments (record keeping)", () => {
+    const q1 = async <T extends Record<string, unknown>>(uid: string, sql: string, params: unknown[] = []) => (await as(uid, () => q<T>(sql, params)))[0];
+    let bill: string;
+    let inst: string;
+
+    beforeEach(async () => {
+      await as(alice, () => q("delete from bills"));
+      await as(alice, () => q("delete from installments"));
+      bill = (await q1<{ id: string }>(alice, "insert into bills (name, amount, due_day, category_id) values ('Internet', 350000, 5, $1) returning id", [FOOD])).id;
+      inst = (await q1<{ id: string }>(alice, "insert into installments (name, monthly_amount, tenor, start_month, due_day, paid_before, category_id) values ('HP', 500000, 3, '2026-09-01', 10, 1, $1) returning id", [FOOD])).id;
+    });
+
+    it("pay_bill with a transaction is atomic and changes the balance once", async () => {
+      await q1(alice, "select pay_bill($1, 2026, 11, 360000, '2026-11-05', true)", [bill]);
+      const p = await q1<{ amount: string; transaction_id: string | null }>(alice, "select amount, transaction_id from bill_payments where bill_id = $1", [bill]);
+      expect(p.amount).toBe("360000");
+      expect(p.transaction_id).toBeTruthy();
+      expect(await balance(alice)).toBe(1_000_000 - 360_000);
+      const tx = await q1<{ description: string; category_id: string; type: string }>(alice, "select description, category_id, type from transactions where id = $1", [p.transaction_id]);
+      expect(tx).toEqual({ description: "Internet", category_id: FOOD, type: "expense" });
+    });
+
+    it("pay_bill without a transaction only records the payment", async () => {
+      await q1(alice, "select pay_bill($1, 2026, 11, 350000, '2026-11-05', false)", [bill]);
+      expect(await balance(alice)).toBe(1_000_000);
+      expect(await as(alice, () => q("select 1 from bill_payments where bill_id = $1 and transaction_id is null", [bill]))).toHaveLength(1);
+    });
+
+    it("a bill can be paid once per month", async () => {
+      await q1(alice, "select pay_bill($1, 2026, 11, 350000, '2026-11-05', false)", [bill]);
+      const e = await pgError(as(alice, () => q("select pay_bill($1, 2026, 11, 350000, '2026-11-06', true)", [bill])));
+      expect(e.code).toBe("23505");
+      expect(await balance(alice)).toBe(1_000_000); // the failed call left no transaction behind
+      await q1(alice, "select pay_bill($1, 2026, 12, 350000, '2026-12-05', false)", [bill]); // next month is fine
+    });
+
+    it("deleting the linked transaction un-pays the bill", async () => {
+      await q1(alice, "select pay_bill($1, 2026, 11, 350000, '2026-11-05', true)", [bill]);
+      await as(alice, () => q("delete from transactions where description = 'Internet'"));
+      expect(await as(alice, () => q("select 1 from bill_payments where bill_id = $1", [bill]))).toHaveLength(0);
+    });
+
+    it("bills and installments only accept expense categories", async () => {
+      expect((await pgError(as(alice, () => q("insert into bills (name, amount, due_day, category_id) values ('X', 1, 1, $1)", [SALARY])))).code).toBe("23503");
+      expect((await pgError(as(alice, () => q("insert into installments (name, monthly_amount, tenor, start_month, due_day, category_id) values ('X', 1, 1, '2026-01-01', 1, $1)", [SALARY])))).code).toBe("23503");
+    });
+
+    it("validates amounts, due day, tenor and the first-of-month start", async () => {
+      for (const sql of [
+        "insert into bills (name, amount, due_day, category_id) values ('X', 0, 1, $1)",
+        "insert into bills (name, amount, due_day, category_id) values ('X', 1, 32, $1)",
+        "insert into installments (name, monthly_amount, tenor, start_month, due_day, category_id) values ('X', 1, 0, '2026-01-01', 1, $1)",
+        "insert into installments (name, monthly_amount, tenor, start_month, due_day, category_id) values ('X', 1, 2, '2026-01-15', 1, $1)",
+        "insert into installments (name, monthly_amount, tenor, start_month, due_day, paid_before, category_id) values ('X', 1, 2, '2026-01-01', 1, 3, $1)",
+      ]) {
+        expect((await pgError(as(alice, () => q(sql, [FOOD])))).code).toBe("23514");
+      }
+    });
+
+    it("pay_installment records payments and refuses to go past the tenor", async () => {
+      await q1(alice, "select pay_installment($1, 500000, '2026-10-10', true)", [inst]);
+      const tx = await q1<{ notes: string }>(alice, "select notes from transactions where description = 'HP'");
+      expect(tx.notes).toBe("Cicilan ke-2 dari 3");
+      await q1(alice, "select pay_installment($1, 500000, '2026-11-10', false)", [inst]);
+      const e = await pgError(as(alice, () => q("select pay_installment($1, 500000, '2026-12-10', true)", [inst])));
+      expect(e.code).toBe("23514");
+      expect(await balance(alice)).toBe(1_000_000 - 500_000);
+    });
+
+    it("users cannot see or pay each other's bills", async () => {
+      expect(await as(bob, () => q("select * from bills"))).toHaveLength(0);
+      const e = await pgError(as(bob, () => q("select pay_bill($1, 2026, 11, 1, '2026-11-05', true)", [bill])));
+      expect(e.code).toBe("P0002");
+    });
+
+    it("category reassignment moves bills and installments; usage counts them", async () => {
+      const [tmp] = await as(alice, () => q<{ id: string }>("insert into categories (name, type) values ('Langganan', 'expense') returning id"));
+      await as(alice, () => q("update bills set category_id = $1 where id = $2", [tmp.id, bill]));
+      await as(alice, () => q("update installments set category_id = $1 where id = $2", [tmp.id, inst]));
+      const usage = await q1<{ transaction_count: string; bill_count: string; installment_count: string }>(alice, "select * from category_usage() where category_id = $1", [tmp.id]);
+      expect(usage).toMatchObject({ transaction_count: "0", bill_count: "1", installment_count: "1" });
+      expect((await pgError(as(alice, () => q("delete from categories where id = $1", [tmp.id])))).code).toBe("23503");
+      await as(alice, () => q("select reassign_and_delete_category($1, $2)", [tmp.id, TRANSPORT]));
+      expect((await q1<{ category_id: string }>(alice, "select category_id from bills where id = $1", [bill])).category_id).toBe(TRANSPORT);
+      expect((await q1<{ category_id: string }>(alice, "select category_id from installments where id = $1", [inst])).category_id).toBe(TRANSPORT);
+    });
+  });
+
   describe("row level security", () => {
     it("users only see their own data", async () => {
       await addTx(alice, "income", 9_999, SALARY);

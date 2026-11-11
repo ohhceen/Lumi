@@ -90,6 +90,70 @@ export const settingsSchema = z.object({
 });
 export type SettingsInput = z.infer<typeof settingsSchema>;
 
+const dueDay = z.coerce
+  .number({ error: "Tanggal jatuh tempo wajib diisi." })
+  .int("Tanggal jatuh tempo tidak valid.")
+  .min(1, "Tanggal jatuh tempo 1–31.")
+  .max(31, "Tanggal jatuh tempo 1–31.");
+
+const optionalNote = z
+  .string()
+  .trim()
+  .max(300, "Catatan maksimal 300 karakter.")
+  .optional()
+  .nullable()
+  .transform((v) => (v ? v : null));
+
+export const billSchema = z.object({
+  name: z.string({ error: "Nama tagihan wajib diisi." }).trim().min(1, "Nama tagihan wajib diisi.").max(60, "Nama maksimal 60 karakter."),
+  amount: rupiah("Nominal"),
+  due_day: dueDay,
+  category_id: id("Pilih kategori pengeluaran."),
+  notes: optionalNote,
+});
+export type BillInput = z.infer<typeof billSchema>;
+
+export const installmentSchema = z
+  .object({
+    name: z.string({ error: "Nama cicilan wajib diisi." }).trim().min(1, "Nama cicilan wajib diisi.").max(60, "Nama maksimal 60 karakter."),
+    monthly_amount: rupiah("Cicilan per bulan"),
+    tenor: z.coerce.number({ error: "Tenor wajib diisi." }).int("Tenor harus bilangan bulat.").min(1, "Tenor minimal 1 bulan.").max(360, "Tenor maksimal 360 bulan."),
+    start_month: z
+      .string({ error: "Bulan mulai wajib diisi." })
+      .regex(/^\d{4}-(0[1-9]|1[0-2])$/, "Bulan mulai tidak valid.")
+      .transform((v) => `${v}-01`),
+    due_day: dueDay,
+    paid_before: z.coerce.number().int("Harus bilangan bulat.").min(0, "Tidak boleh negatif.").default(0),
+    category_id: id("Pilih kategori pengeluaran."),
+    notes: optionalNote,
+  })
+  .refine((v) => Number(v.paid_before) <= Number(v.tenor), {
+    path: ["paid_before"],
+    message: "Tidak boleh lebih dari tenor.",
+    // also check while other fields are still invalid, so every error shows at once
+    when: (payload) => {
+      const v = payload.value as { tenor?: unknown; paid_before?: unknown } | undefined;
+      return Number.isFinite(Number(v?.tenor)) && Number.isFinite(Number(v?.paid_before)) && String(v?.tenor ?? "") !== "";
+    },
+  });
+export type InstallmentInput = z.infer<typeof installmentSchema>;
+
+export const payBillSchema = z.object({
+  bill_id: id("Tagihan tidak ditemukan."),
+  year: z.coerce.number().int().min(2000).max(2100),
+  month: z.coerce.number().int().min(1).max(12),
+  amount: rupiah("Nominal"),
+  paid_on: dateString,
+  record: z.boolean(),
+});
+
+export const payInstallmentSchema = z.object({
+  installment_id: id("Cicilan tidak ditemukan."),
+  amount: rupiah("Nominal"),
+  paid_on: dateString,
+  record: z.boolean(),
+});
+
 /** Filters for the transaction history (from URL search params). */
 export const transactionFilterSchema = z.object({
   q: z.string().trim().max(100).optional().catch(undefined),
