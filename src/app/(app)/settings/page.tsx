@@ -13,7 +13,7 @@ export default async function SettingsPage() {
   const [ctx, totals] = await Promise.all([getAppContext(), getTotals()]);
   return (
     <div>
-      <PageHeader title="Pengaturan" description="Atur saldo awal, zona waktu, dan profilmu." character="jessie" />
+      <PageHeader title="Pengaturan" description="Atur saldo awal, zona waktu, dan profilmu." />
       <div className="grid gap-5 lg:grid-cols-3">
         <Card className="lg:col-span-2">
           <CardHeader>

@@ -1,11 +1,9 @@
-import { Plus } from "lucide-react";
+import { PiggyBank, Plus } from "lucide-react";
 import { BudgetAlerts } from "@/components/budget-alerts";
 import { BudgetRow } from "@/components/budget-row";
 import { CategoryIcon } from "@/components/category-icon";
 import { EmptyState } from "@/components/empty-state";
 import { BudgetActions, BudgetDialog, CopyBudgetsButton } from "@/components/forms/budget-dialog";
-import { Character, hasCharacter } from "@/components/character";
-import { ToyBlock } from "@/components/decorations";
 import { MonthPicker } from "@/components/month-picker";
 import { PageHeader } from "@/components/page-header";
 import { Button } from "@/components/ui/button";
@@ -50,13 +48,13 @@ export default async function BudgetPage({ searchParams }: { searchParams: Promi
 
   return (
     <div>
-      <PageHeader title="Anggaran Bulanan" description="Tentukan batas belanja per kategori, para alien bantu mengawasi.">
+      <PageHeader title="Anggaran Bulanan" description="Tentukan batas belanja per kategori dan pantau pemakaiannya.">
         <MonthPicker value={ym} />
       </PageHeader>
 
-      <Card className="mb-5 border-2 border-income/40 bg-[#f1fbf4]">
+      <Card className="mb-5">
         <div className="flex flex-col gap-5 md:flex-row md:items-center">
-          {hasCharacter("aliens") ? <Character name="aliens" className="size-24 shrink-0 animate-float" /> : <ToyBlock letter="Rp" color="#3fae6f" className="size-16 shrink-0" />}
+          <span aria-hidden className="inline-flex size-16 shrink-0 items-center justify-center rounded-3xl bg-cream text-ink"><PiggyBank className="size-8" strokeWidth={2} /></span>
           <div className="flex-1">
             <p className="text-sm font-extrabold text-ink-soft capitalize">Total anggaran {formatMonthLabel(ym)}</p>
             {overview.count ? (

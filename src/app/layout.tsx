@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#8fd0f7",
+  themeColor: "#1e1024",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

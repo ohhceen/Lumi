@@ -13,9 +13,7 @@
     "typecheck": "tsc --noEmit",
     "test:e2e": "playwright test --trace off",
     "db:start": "supabase start -x studio,imgproxy,storage-api,realtime,edge-runtime,logflare,vector,supavisor,mailpit,postgres-meta",
-    "db:stop": "supabase stop",
-    "predev": "node scripts/gen-character-manifest.mjs",
-    "prebuild": "node scripts/gen-character-manifest.mjs"
+    "db:stop": "supabase stop"
   },
   "dependencies": {
     "@radix-ui/react-alert-dialog": "^1.2.1",

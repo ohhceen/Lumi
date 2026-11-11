@@ -238,3 +238,21 @@ test("income and expenses pages only list their own type", async ({ page }) => {
   await expect(page.locator("table")).toContainText("Honor proyek");
   await expect(page.locator("table")).toContainText("Es kopi");
 });
+
+test("quick add opens the expense form with the category preselected", async ({ page }) => {
+  await page.goto("/");
+  const quick = page.getByRole("button", { name: /^Catat pengeluaran / }).first();
+  const label = (await quick.getAttribute("aria-label"))!.replace("Catat pengeluaran ", "");
+  await quick.click();
+  const dialog = page.getByRole("dialog");
+  await expect(dialog.getByRole("radio", { name: "Pengeluaran" })).toHaveAttribute("aria-checked", "true");
+  await expect(dialog.getByLabel("Kategori").locator("option:checked")).toHaveText(label);
+  await dialog.getByLabel("Jumlah").fill("18000");
+  await dialog.getByLabel("Deskripsi").fill("Pintasan cepat");
+  await dialog.getByRole("button", { name: /Simpan/ }).click();
+  await expect(dialog).toBeHidden();
+  const [row] = await sql<{ name: string; amount: string }>(
+    "select c.name, t.amount from transactions t join categories c on c.id = t.category_id where t.description = 'Pintasan cepat'",
+  );
+  expect(row).toEqual({ name: label, amount: "18000" });
+});

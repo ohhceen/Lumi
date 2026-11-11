@@ -12,7 +12,7 @@ const MESSAGES = [
   "Catatan kecil hari ini, tabungan besar nanti. ✨",
   "Setiap Rupiah yang tercatat adalah langkah menuju tujuanmu! 🚀",
   "Hemat bukan pelit — kamu sedang berinvestasi untuk dirimu sendiri. 💙",
-  "Ke tak terhingga dan melampauinya: satu catatan kecil hari ini! 🚀",
+  "Satu catatan kecil hari ini, satu langkah menuju tujuanmu. 🚀",
   "Anggaran itu peta, bukan penjara. Jelajahi dengan bijak! 🗺️",
   "Kopi hari ini atau liburan bulan depan? Kamu yang pilih! ☕",
   "Uang yang terencana selalu lebih tenang. 🌙",

@@ -10,12 +10,14 @@ export function TransactionDialog({
   categories,
   defaultDate,
   defaultType,
+  defaultCategoryId,
   transaction,
 }: {
   trigger: React.ReactNode;
   categories: Category[];
   defaultDate: string;
   defaultType?: TransactionType;
+  defaultCategoryId?: string;
   transaction?: Pick<Transaction, "id" | "type" | "description" | "amount" | "category_id" | "transaction_date" | "notes">;
 }) {
   const [open, setOpen] = React.useState(false);
@@ -33,6 +35,7 @@ export function TransactionDialog({
             transaction={transaction}
             defaultDate={defaultDate}
             defaultType={defaultType}
+            defaultCategoryId={defaultCategoryId}
             onDone={() => setOpen(false)}
           />
         ) : null}

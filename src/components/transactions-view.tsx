@@ -15,9 +15,9 @@ import type { TransactionType } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
 const MODES = {
-  all: { path: "/transactions", title: "Transaksi", description: "Semua pemasukan dan pengeluaranmu, tercatat rapi.", character: undefined },
-  income: { path: "/income", title: "Pemasukan", description: "Semua uang yang masuk, satu tempat.", character: "buzz" },
-  expense: { path: "/expenses", title: "Pengeluaran", description: "Ke mana saja uangmu pergi.", character: "woody" },
+  all: { path: "/transactions", title: "Transaksi", description: "Semua pemasukan dan pengeluaranmu, tercatat rapi." },
+  income: { path: "/income", title: "Pemasukan", description: "Semua uang yang masuk, satu tempat." },
+  expense: { path: "/expenses", title: "Pengeluaran", description: "Ke mana saja uangmu pergi." },
 } as const;
 
 function hrefWith(basePath: string, filters: TransactionFilters, patch: Partial<TransactionFilters>, fixed: boolean) {
@@ -57,7 +57,7 @@ export async function TransactionsView({ searchParams, fixedType }: { searchPara
   return (
     <div>
       <TypeTabs active={fixedType ?? "all"} />
-      <PageHeader title={mode.title} description={mode.description} character={mode.character}>
+      <PageHeader title={mode.title} description={mode.description}>
         {fixedType !== "expense" ? (
         <TransactionDialog
           categories={categories}
@@ -265,14 +265,14 @@ function TypeTabs({ active }: { active: "all" | TransactionType }) {
     { key: "expense", href: "/expenses", label: "Pengeluaran" },
   ] as const;
   return (
-    <nav aria-label="Jenis transaksi" className="mb-4 inline-flex rounded-2xl border-2 border-line bg-white p-1 shadow-soft">
+    <nav aria-label="Jenis transaksi" className="mb-4 inline-flex rounded-full bg-white p-1 shadow-soft">
       {tabs.map((t) => (
         <Link
           key={t.key}
           href={t.href}
           aria-current={active === t.key ? "page" : undefined}
           className={cn(
-            "rounded-xl px-3 py-1.5 text-sm font-extrabold transition-colors sm:px-4",
+            "rounded-full px-3 py-1.5 text-sm font-extrabold transition-colors sm:px-4",
             active === t.key
               ? t.key === "income"
                 ? "bg-btn-income text-white"

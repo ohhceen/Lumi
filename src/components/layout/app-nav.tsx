@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 import { LogOut } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { LogoMark } from "@/components/brand";
-import { Star } from "@/components/decorations";
 import { logout } from "@/app/actions/auth";
 import { NAV_ITEMS, TRANSACTION_SUB_ITEMS, isActive } from "./nav-items";
 
@@ -15,14 +14,13 @@ function NavLink({ href, label, icon: Icon, active, sub = false }: { href: strin
       href={href}
       aria-current={active ? "page" : undefined}
       className={cn(
-        "group flex items-center gap-3 rounded-2xl px-3 font-extrabold transition-all",
+        "group flex items-center gap-3 rounded-full px-3.5 font-extrabold transition-all",
         sub ? "ml-6 py-2 text-[13px]" : "py-2.5 text-sm",
-        active ? "bg-primary-soft text-primary-strong shadow-[inset_0_0_0_2px_#5ab0ea]" : "text-ink-soft hover:bg-accent-soft hover:text-ink",
+        active ? "bg-primary-soft text-ink shadow-[inset_0_0_0_1px_#e4e4e8]" : "text-ink-soft hover:bg-cream hover:text-ink",
       )}
     >
       <Icon className={cn("shrink-0 transition-transform group-hover:scale-110", sub ? "size-4" : "size-5")} strokeWidth={2.4} />
       {label}
-      {active && !sub ? <Star className="ml-auto size-4" /> : null}
     </Link>
   );
 }
@@ -30,11 +28,11 @@ function NavLink({ href, label, icon: Icon, active, sub = false }: { href: strin
 export function Sidebar({ name, children }: { name: string; children?: React.ReactNode }) {
   const pathname = usePathname();
   return (
-    <aside className="sticky top-0 hidden h-dvh w-64 shrink-0 flex-col border-r border-line bg-white/85 px-4 py-6 backdrop-blur lg:flex">
+    <aside className="sticky top-4 m-4 mr-0 hidden h-[calc(100dvh-2rem)] w-60 shrink-0 flex-col overflow-y-auto rounded-3xl bg-white px-3.5 py-6 shadow-pop lg:flex">
       <Link href="/" className="group mb-8 flex items-center gap-3 px-2">
-        <LogoMark className="size-11 transition-transform group-hover:-rotate-6" />
+        <LogoMark className="size-11" />
         <div>
-          <p className="text-xl leading-none font-black whitespace-nowrap text-primary-strong">Lumi</p>
+          <p className="text-xl leading-none font-black whitespace-nowrap text-ink">Lumi</p>
           <p className="mt-1 text-xs font-bold text-ink-faint">Teman keuanganmu</p>
         </div>
       </Link>
@@ -52,8 +50,8 @@ export function Sidebar({ name, children }: { name: string; children?: React.Rea
         ))}
       </nav>
 
-      <div className="mt-6 rounded-3xl border border-accent/60 bg-accent-soft p-4">
-        <p className="text-xs font-bold text-accent-strong">Masuk sebagai</p>
+      <div className="mt-6 rounded-3xl border border-line bg-cream p-4">
+        <p className="text-xs font-bold text-ink-soft">Masuk sebagai</p>
         <p className="truncate font-black text-ink">{name}</p>
         <form action={logout}>
           <button className="mt-2 inline-flex items-center gap-1.5 text-xs font-extrabold text-ink-soft hover:text-expense-strong" type="submit">
@@ -67,10 +65,10 @@ export function Sidebar({ name, children }: { name: string; children?: React.Rea
 
 export function MobileTopBar({ children }: { children?: React.ReactNode }) {
   return (
-    <header className="sticky top-0 z-30 flex items-center justify-between border-b border-line bg-white/90 px-4 py-3 backdrop-blur lg:hidden">
+    <header className="sticky top-0 z-30 flex items-center justify-between bg-white px-4 py-3 shadow-soft lg:hidden">
       <Link href="/" className="flex items-center gap-2">
         <LogoMark className="size-9" />
-        <span className="text-lg font-black text-primary-strong">Lumi</span>
+        <span className="text-lg font-black text-ink">Lumi</span>
       </Link>
       {children}
     </header>
@@ -80,7 +78,7 @@ export function MobileTopBar({ children }: { children?: React.ReactNode }) {
 export function BottomNav() {
   const pathname = usePathname();
   return (
-    <nav aria-label="Navigasi utama" className="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-white/95 pb-[env(safe-area-inset-bottom)] backdrop-blur lg:hidden">
+    <nav aria-label="Navigasi utama" className="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-white pb-[env(safe-area-inset-bottom)] lg:hidden">
       <ul className="mx-auto grid max-w-lg grid-cols-6">
         {NAV_ITEMS.map(({ href, short, icon: Icon }) => {
           // income/expenses pages belong to the Transaksi tab
@@ -90,7 +88,7 @@ export function BottomNav() {
               <Link
                 href={href}
                 aria-current={active ? "page" : undefined}
-                className={cn("flex flex-col items-center gap-0.5 py-2 text-[10px] font-extrabold transition-colors", active ? "text-primary-strong" : "text-ink-faint hover:text-ink")}
+                className={cn("flex flex-col items-center gap-0.5 py-2 text-[10px] font-extrabold transition-colors", active ? "text-ink" : "text-ink-faint hover:text-ink")}
               >
                 <span className={cn("rounded-full px-3 py-1 transition-colors", active && "bg-primary-soft")}>
                   <Icon className="size-5" strokeWidth={2.4} />

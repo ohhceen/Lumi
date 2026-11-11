@@ -29,8 +29,8 @@ export function StatCard({
   return (
     <div
       className={cn(
-        "relative overflow-hidden rounded-3xl border border-line bg-card p-5 shadow-soft transition-transform duration-200 hover:-translate-y-0.5 animate-pop-in",
-        highlight && "border-primary/50 bg-primary-soft shadow-pop",
+        "relative overflow-hidden rounded-3xl bg-card p-5 shadow-soft transition-transform duration-200 hover:-translate-y-0.5 animate-pop-in",
+        highlight && "shadow-pop",
         className,
       )}
     >
@@ -40,7 +40,7 @@ export function StatCard({
         </span>
         <p className="text-sm font-extrabold text-ink-soft">{label}</p>
       </div>
-      <p className="tabular mt-3 text-2xl font-black tracking-tight text-ink sm:text-[1.65rem]">{value}</p>
+      <p className={cn("tabular mt-3 font-black tracking-tight text-ink", highlight ? "text-[1.85rem] sm:text-[2rem]" : "text-2xl sm:text-[1.65rem]")}>{value}</p>
       {sub ? <div className="mt-1 text-xs font-bold text-ink-faint">{sub}</div> : null}
     </div>
   );

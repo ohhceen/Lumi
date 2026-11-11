@@ -80,14 +80,14 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
 
   return (
     <div className="space-y-5">
-      <PageHeader title="Laporan & Analisis" description="Pahami kebiasaan keuanganmu lewat angka dan grafik." character="hamm">
+      <PageHeader title="Laporan & Analisis" description="Pahami kebiasaan keuanganmu lewat angka dan grafik.">
         <MonthPicker value={ym} />
         <ReportExport data={exportData} />
       </PageHeader>
 
       {/* Monthly report */}
       <section aria-labelledby="monthly" className="space-y-4">
-        <h2 id="monthly" className="text-lg font-black capitalize">Laporan bulanan · {periodLabel}</h2>
+        <h2 id="monthly" className="text-lg font-black text-on-dark capitalize">Laporan bulanan · {periodLabel}</h2>
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           <StatCard label="Total Pemasukan" tone="income" icon={TrendingUp} value={formatIDR(report.income)} sub={<Delta c={report.vsPrevious.income} good="up" />} />
           <StatCard label="Total Pengeluaran" tone="expense" icon={TrendingDown} value={formatIDR(report.expense)} sub={<Delta c={report.vsPrevious.expense} good="down" />} />

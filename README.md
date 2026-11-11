@@ -1,6 +1,6 @@
 # Lumi ⭐
 
-A cute, private personal-finance tracker for one person: record income and expenses, see your one main balance, set monthly budgets per category, and understand your habits with daily/monthly reports. The UI is in Indonesian, amounts are in Rupiah, with a light, Toy Story-inspired theme.
+A cute, private personal-finance tracker for one person: record income and expenses, see your one main balance, set monthly budgets per category, and understand your habits with daily/monthly reports. The UI is in Indonesian, amounts are in Rupiah, with a plum-and-white theme.
 
 **Stack:** Next.js 15 (App Router) · TypeScript · Tailwind CSS v4 · shadcn-style components (Radix) · Lucide · Recharts · Supabase (PostgreSQL + Auth) · Zod · date-fns · ExcelJS / jsPDF · Vitest · Playwright
 
@@ -10,7 +10,7 @@ A cute, private personal-finance tracker for one person: record income and expen
 
 | Area | What you get |
 |---|---|
-| **Dashboard** | Sky-and-clouds hero with greeting, date, motivational message and a status of the month (Woody & Buzz slots), achievement banner, Total Balance / monthly Income / monthly Expenses / Remaining Budget cards, 6-month income-vs-expense chart, category donut, daily spending chart, recent transactions, budget progress and budget alerts. Month selector. |
+| **Dashboard** | Greeting card with date, motivational message and a status of the month, achievement banner, quick-add shortcuts for your most used categories, budget rings, Total Balance / monthly Income / monthly Expenses / Remaining Budget cards, 6-month income-vs-expense chart, category donut, daily spending chart, recent transactions, budget progress and budget alerts. Month selector. |
 | **Transactions** (+ Pemasukan / Pengeluaran pages) | Add / edit / delete (with confirmation) income and expenses. Search by description, filter by type, category, month or exact date, sort newest/oldest, pagination. Table on desktop, cards on mobile. Quick-add button on every page. |
 | **Balance** | `Current Balance = Initial Balance + Total Income − Total Expenses`, always recomputed from the records. Nothing is stored as a running balance, so edits and deletes can never double-count. |
 | **Budget** | One budget per expense category per month (enforced by the database). Progress bars with 4 states: **<70% safe**, **70–89% approaching**, **90–99% almost exceeded**, **≥100% exceeded**, plus friendly alerts. "Copy from last month". Lists spending in categories with no budget. |
@@ -18,23 +18,9 @@ A cute, private personal-finance tracker for one person: record income and expen
 | **Categories** | 6 income + 11 expense defaults are created automatically. Add / edit (name, type, icon) / delete. A category that is still used by transactions can only be deleted by **moving its transactions to another category** of the same type (done atomically in SQL). |
 | **Settings** | Name, initial balance (can be negative), timezone (default **Asia/Makassar**, which decides what "today" and "this month" are). |
 
-## Theme & character images
+## Theme
 
-The UI uses a light, Toy Story-inspired theme: a sky-blue backdrop with white clouds and yellow stars, white cards, and toy-block details. The colour tokens live in `src/app/globals.css`.
-
-**No character artwork is included.** Toy Story characters are © Disney/Pixar, so add images you have the right to use to `public/characters/`. The file names and where each one appears are listed in [`public/characters/README.md`](public/characters/README.md):
-
-| File | Character | Shown on |
-|---|---|---|
-| `woody.png` | Woody | Dashboard hero, Pengeluaran page, achievement banner |
-| `buzz.png` | Buzz Lightyear | Dashboard hero, Pemasukan page, achievement banner |
-| `aliens.png` | Little Green Men | Anggaran page, empty states |
-| `jessie.png` | Jessie | Pengaturan page, loading screen |
-| `rex.png` | Rex | Kategori page, loading screen |
-| `hamm.png` | Hamm | Laporan page, loading screen |
-| `lotso.png` | Lotso | Login page |
-
-Images are detected automatically on `npm run dev` / `npm run build`. A missing image simply isn't shown, so there are never broken images. To see every slot as a dashed outline while placing images, set `NEXT_PUBLIC_SHOW_CHARACTER_SLOTS=1` in `.env.local`.
+A dark plum background with white cards on top. Accents are charcoal and white, and colour is used only for meaning: green for income and safe budgets, red for expenses, amber/orange for budget warnings. The colour tokens live in `src/app/globals.css`.
 
 ## Architecture
 
@@ -181,7 +167,6 @@ src/
     charts/           Recharts components + validated colour tokens
     forms/            transaction, budget, category, settings forms
     layout/           sidebar, mobile top bar, bottom nav
-    character.tsx     character image slots (images from public/characters/)
     brand.tsx         logo mark
   lib/
     finance/          calculations (pure)

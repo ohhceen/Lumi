@@ -16,18 +16,21 @@ export function TransactionForm({
   transaction,
   defaultDate,
   defaultType = "expense",
+  defaultCategoryId,
   onDone,
 }: {
   categories: Category[];
   transaction?: Pick<Transaction, "id" | "type" | "description" | "amount" | "category_id" | "transaction_date" | "notes">;
   defaultDate: string;
   defaultType?: TransactionType;
+  /** preselect a category (quick add) */
+  defaultCategoryId?: string;
   onDone?: () => void;
 }) {
   const [type, setType] = React.useState<TransactionType>(transaction?.type ?? defaultType);
   const [amount, setAmount] = React.useState(transaction ? formatDigitsGrouped(String(transaction.amount)) : "");
   const [description, setDescription] = React.useState(transaction?.description ?? "");
-  const [categoryId, setCategoryId] = React.useState(transaction?.category_id ?? "");
+  const [categoryId, setCategoryId] = React.useState(transaction?.category_id ?? defaultCategoryId ?? "");
   const [date, setDate] = React.useState(transaction?.transaction_date ?? defaultDate);
   const [notes, setNotes] = React.useState(transaction?.notes ?? "");
   const [errors, setErrors] = React.useState<Record<string, string[]>>({});

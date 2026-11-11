@@ -14,7 +14,7 @@ export default async function CategoriesPage() {
   const [categories, usage] = await Promise.all([getCategories(), getCategoryUsage()]);
   return (
     <div>
-      <PageHeader title="Kategori" description="Kelompokkan transaksimu supaya laporan lebih mudah dibaca." character="rex" />
+      <PageHeader title="Kategori" description="Kelompokkan transaksimu supaya laporan lebih mudah dibaca." />
       <div className="grid gap-5 lg:grid-cols-2">
         <Column type="income" categories={categories} usage={usage} />
         <Column type="expense" categories={categories} usage={usage} />

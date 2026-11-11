@@ -1,15 +1,14 @@
 import Link from "next/link";
-import { ArrowRight, PiggyBank, Plus, TrendingDown, TrendingUp, Wallet } from "lucide-react";
+import { ArrowRight, CircleCheck, PiggyBank, Plus, Sparkles, TrendingDown, TrendingUp, TriangleAlert, Wallet } from "lucide-react";
 import { BudgetAlerts } from "@/components/budget-alerts";
-import { BudgetRow } from "@/components/budget-row";
+import { BudgetRings } from "@/components/budget-rings";
 import { CategoryDonut } from "@/components/charts/category-donut";
 import { DailySpendingChart } from "@/components/charts/daily-chart";
 import { IncomeExpenseChart } from "@/components/charts/income-expense-chart";
-import { StarField, Star } from "@/components/decorations";
-import { Character } from "@/components/character";
 import { EmptyState } from "@/components/empty-state";
 import { TransactionDialog } from "@/components/forms/transaction-dialog";
 import { MonthPicker } from "@/components/month-picker";
+import { QuickAdd } from "@/components/quick-add";
 import { StatCard } from "@/components/stat-card";
 import { TransactionList } from "@/components/transaction-list";
 import { Button } from "@/components/ui/button";
@@ -19,6 +18,7 @@ import { formatDateLong, formatMonthLabel, formatShortMonth, hourInTimezone, mon
 import { buildBudgetProgress, categoryBreakdown, computeBalance, dailySeries, monthlyTrend, sumTotals, summarizeBudgets } from "@/lib/finance";
 import { formatIDR, formatPercent } from "@/lib/format";
 import { greeting, moodFor, motivationalMessage } from "@/lib/greeting";
+import { cn } from "@/lib/utils";
 
 export const metadata = { title: "Dashboard" };
 
@@ -47,35 +47,33 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
   const daily = dailySeries(monthTx, ym);
   const trend = monthlyTrend(monthRows, ym, 6).map((m) => ({ label: formatShortMonth(m), income: m.income, expense: m.expense }));
   const { tone, note } = moodFor(net, budget, monthTx.length > 0);
+  // Quick add: the 3 expense categories used most often this month, topped up with the first defaults.
+  const expenseCats = categories.filter((c) => c.type === "expense");
+  const frequent = [...slices].sort((a, b) => b.count - a.count).map((sl) => expenseCats.find((c) => c.id === sl.categoryId)).filter((c): c is (typeof expenseCats)[number] => Boolean(c));
+  const shortcuts = [...frequent, ...expenseCats.filter((c) => !frequent.includes(c))].slice(0, 3);
   const isCurrent = ym.year === ctx.currentMonth.year && ym.month === ctx.currentMonth.month;
 
   return (
     <div className="space-y-5">
       {/* Hero */}
-      <section className="sky-hero relative overflow-hidden rounded-3xl border-2 border-white p-5 pb-8 shadow-pop sm:p-7 sm:pb-10">
-        <StarField />
-        <div className="relative flex flex-col gap-4 md:flex-row md:items-end">
-          <div className="flex-1">
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <p className="text-sm font-extrabold text-ink-soft capitalize">{formatDateLong(ctx.today)}</p>
-              <MonthPicker value={ym} />
-            </div>
-            <h1 className="mt-2 text-2xl font-black text-ink sm:text-3xl">
-              {greeting(hourInTimezone(ctx.timezone))}, {ctx.profile.name}! 👋
+      <section aria-label="Sapaan" className="rounded-3xl bg-card p-5 shadow-pop sm:p-7">
+        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div className="min-w-0">
+            <p className="text-sm font-extrabold text-ink-soft capitalize">{formatDateLong(ctx.today)}</p>
+            <h1 className="mt-1 text-2xl font-black text-ink sm:text-3xl">
+              {greeting(hourInTimezone(ctx.timezone))}, {ctx.profile.name}
             </h1>
-            <p className="mt-1 max-w-xl text-sm font-bold text-ink-soft">{motivationalMessage(ctx.today)}</p>
+            <p className="mt-1 max-w-xl text-sm font-semibold text-ink-soft">{motivationalMessage(ctx.today)}</p>
             <p
-              className={`mt-3 inline-flex items-center gap-1.5 rounded-full border-2 bg-white px-3 py-1 text-xs font-extrabold ${
-                tone === "alert" ? "border-expense text-expense-strong" : tone === "warning" ? "border-accent text-accent-strong" : "border-white text-primary-strong"
-              }`}
+              className={cn(
+                "mt-3 inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-extrabold",
+                tone === "alert" ? "bg-expense-soft text-expense-strong" : tone === "warning" ? "bg-accent-soft text-accent-strong" : tone === "great" ? "bg-income-soft text-income-strong" : "bg-primary-soft text-ink-soft",
+              )}
             >
-              <Star className="size-3.5" /> {note}
+              {tone === "alert" || tone === "warning" ? <TriangleAlert className="size-3.5" /> : <CircleCheck className="size-3.5" />} {note}
             </p>
           </div>
-          <div className="flex shrink-0 items-end justify-center gap-1 self-center md:self-end">
-            <Character name="woody" priority className="h-24 w-20 sm:h-40 sm:w-28" />
-            <Character name="buzz" priority className="h-24 w-20 sm:h-40 sm:w-28" />
-          </div>
+          <MonthPicker value={ym} className="self-start md:self-center" />
         </div>
       </section>
 
@@ -104,7 +102,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
         />
         <StatCard
           label="Sisa Anggaran"
-          tone="accent"
+          tone="secondary"
           icon={PiggyBank}
           value={budget.count ? <span className={budget.remaining < 0 ? "text-expense-strong" : undefined}>{formatIDR(budget.remaining)}</span> : "—"}
           sub={
@@ -122,12 +120,10 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
       <BudgetAlerts progress={progress} />
 
       {tone === "great" && net > 0 ? (
-        <section aria-label="Pencapaian" className="flex items-center gap-3 rounded-3xl border-2 border-accent/70 bg-accent-soft px-4 py-3 shadow-soft">
-          <div className="flex shrink-0 -space-x-3">
-            <Character name="buzz" className="size-14" />
-            <Character name="woody" className="size-14" />
-          </div>
-          <Star className="size-6 shrink-0" />
+        <section aria-label="Pencapaian" className="flex items-center gap-3 rounded-3xl bg-card px-4 py-3 shadow-soft">
+          <span aria-hidden className="inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-income-soft text-income-strong">
+            <Sparkles className="size-5" />
+          </span>
           <p className="text-sm font-bold text-ink">
             <span className="font-black">Pencapaian bulan ini!</span> Kamu menyisihkan{" "}
             <span className="tabular font-black text-income-strong">{formatIDR(net)}</span>
@@ -205,32 +201,36 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
             </EmptyState>
           )}
         </Card>
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <div>
-              <CardTitle>Progres Anggaran</CardTitle>
-              <CardDescription>{isCurrent ? "Bulan ini" : formatMonthLabel(ym)}</CardDescription>
-            </div>
-            <Button asChild variant="ghost" size="sm">
-              <Link href={`/budget?month=${range.start.slice(0, 7)}`}>
-                Kelola <ArrowRight />
-              </Link>
-            </Button>
-          </CardHeader>
-          {progress.length ? (
-            <div className="space-y-5">
-              {progress.slice(0, 5).map((p) => (
-                <BudgetRow key={p.budgetId} p={p} compact />
-              ))}
-            </div>
-          ) : (
-            <EmptyState title="Belum ada anggaran" description="Atur batas belanja per kategori supaya pengeluaran tetap terkendali.">
-              <Button asChild variant="secondary">
-                <Link href={`/budget?month=${range.start.slice(0, 7)}`}>Atur anggaran</Link>
+        <div className="flex flex-col gap-5 lg:col-span-2">
+          <Card>
+            <CardHeader>
+              <div>
+                <CardTitle>Progres Anggaran</CardTitle>
+                <CardDescription>{isCurrent ? "Bulan ini" : formatMonthLabel(ym)}</CardDescription>
+              </div>
+              <Button asChild variant="ghost" size="sm">
+                <Link href={`/budget?month=${range.start.slice(0, 7)}`}>
+                  Kelola <ArrowRight />
+                </Link>
               </Button>
-            </EmptyState>
-          )}
-        </Card>
+            </CardHeader>
+            {progress.length ? (
+              <BudgetRings progress={progress} />
+            ) : (
+              <EmptyState title="Belum ada anggaran" description="Atur batas belanja per kategori supaya pengeluaran tetap terkendali.">
+                <Button asChild variant="secondary">
+                  <Link href={`/budget?month=${range.start.slice(0, 7)}`}>Atur anggaran</Link>
+                </Button>
+              </EmptyState>
+            )}
+          </Card>
+          <Card>
+            <CardHeader className="mb-3">
+              <CardTitle>Catat cepat</CardTitle>
+            </CardHeader>
+            <QuickAdd shortcuts={shortcuts} categories={categories} today={ctx.today} />
+          </Card>
+        </div>
       </section>
     </div>
   );

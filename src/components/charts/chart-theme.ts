@@ -1,4 +1,4 @@
-// Chart colours for the light Toy Story theme, validated with the dataviz
+// Chart colours (charts always sit on white cards), validated with the dataviz
 // palette validator in light mode:
 // - income/expense pair (#17825d / #f28b6e): lightness band, chroma,
 //   CVD (ΔE 11.3) and normal-vision checks pass. The coral is < 3:1 against
@@ -17,13 +17,13 @@ export const OTHER_COLOR = "#a3abb8";
 export const SURFACE = "#ffffff"; // gap/ring colour between marks
 
 export const AXIS = {
-  stroke: "#74839a",
-  fill: "#74839a",
+  stroke: "#6e6e76",
+  fill: "#6e6e76",
   fontSize: 11,
   fontWeight: 500,
   fontFamily: "var(--font-poppins), sans-serif",
 } as const;
 
-export const GRID = "#e3edf7";
-export const CURSOR_FILL = "rgb(90 176 234 / 0.12)";
-export const MUTED_LINE = "#4e5f78";
+export const GRID = "#ececef";
+export const CURSOR_FILL = "rgb(29 29 31 / 0.06)";
+export const MUTED_LINE = "#5f5f66";

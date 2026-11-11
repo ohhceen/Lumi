@@ -33,7 +33,7 @@ export async function createBudget(input: unknown): Promise<ActionResult> {
   const { error } = await supabase.from("budgets").insert(parsed.data);
   if (error) return { ok: false, message: friendlyDbError(error, "Anggaran gagal disimpan.") };
   revalidatePath("/", "layout");
-  return { ok: true, message: "Anggaran dibuat! Para alien siap mengawasi 👀" };
+  return { ok: true, message: "Anggaran dibuat ✓" };
 }
 
 export async function updateBudget(id: string, input: unknown): Promise<ActionResult> {
