@@ -36,7 +36,7 @@ test("login rejects a wrong password and protects pages", async ({ browser }) =>
   await expect(page).toHaveURL(/\/login$/);
   await page.getByLabel("Email").fill("buddy@example.com");
   await page.getByLabel("Password").fill("salah");
-  await page.getByRole("button", { name: "Masuk" }).click();
+  await page.getByRole("button", { name: "Masuk", exact: true }).click();
   await expect(page.getByText("Email atau password salah.")).toBeVisible();
   await ctx.close();
 });

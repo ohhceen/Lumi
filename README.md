@@ -91,6 +91,21 @@ In the Supabase dashboard, open **SQL Editor**, then paste and run each file in 
 
 The trigger creates your settings and the default categories automatically. If you created the user *before* running the migrations, that's fine too: the app runs `ensure_user_setup()` on first login.
 
+### 4b. Sign in with Google (optional)
+
+The login page has a **Masuk dengan Google** button. It needs a Google OAuth client:
+
+1. **Google Cloud Console** (https://console.cloud.google.com):
+   1. Create a project, then go to **APIs & Services → OAuth consent screen**. Choose **External**, give the app a name ("Lumi") and your email, and save. While the app is in *Testing*, add your Google address(es) under **Test users**.
+   2. Go to **Credentials → Create credentials → OAuth client ID**, type **Web application**.
+      - Authorized JavaScript origins: your site, e.g. `https://mymoney-buddy.vercel.app`
+      - Authorized redirect URIs: `https://<project-ref>.supabase.co/auth/v1/callback`
+   3. Copy the **Client ID** and **Client secret**.
+2. **Supabase → Authentication → Sign In / Providers → Google**: enable it, paste the ID and secret, save.
+3. **Supabase → Authentication → URL Configuration**: Site URL = your site; add Redirect URLs `https://<your-site>/auth/callback` and `http://localhost:3000/auth/callback`.
+
+Signing in with Google uses the **same account** as email/password when the Google address matches (Supabase links them automatically). With "Allow new users to sign up" OFF, other Google accounts are refused and see a clear message.
+
 ### 5. Environment variables
 
 ```bash
