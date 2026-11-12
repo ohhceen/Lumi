@@ -7,7 +7,7 @@ export function ObligationTabs({ active }: { active: "bills" | "installments" })
     { key: "installments", href: "/installments", label: "Cicilan" },
   ] as const;
   return (
-    <nav aria-label="Tagihan dan cicilan" className="mb-4 inline-flex rounded-full bg-white p-1 shadow-soft">
+    <nav aria-label="Tagihan dan cicilan" className="mb-4 inline-flex rounded-full glass p-1 shadow-soft">
       {tabs.map((t) => (
         <Link
           key={t.key}

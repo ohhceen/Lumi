@@ -50,9 +50,9 @@ export default async function BillsPage({ searchParams }: { searchParams: Promis
 
       {rows.length ? (
         <div className="mb-5 grid grid-cols-3 gap-2 sm:gap-3">
-          <Pill label="Total tagihan" value={formatIDR(summary.total)} className="bg-white text-ink" />
+          <Pill label="Total tagihan" value={formatIDR(summary.total)} className="glass text-ink" />
           <Pill label={`Lunas ${summary.paidCount}/${summary.count}`} value={formatIDR(summary.paid)} className="bg-income-soft text-income-strong" />
-          <Pill label="Belum dibayar" value={formatIDR(summary.unpaid)} className={summary.unpaid ? "bg-expense-soft text-expense-strong" : "bg-white text-ink"} />
+          <Pill label="Belum dibayar" value={formatIDR(summary.unpaid)} className={summary.unpaid ? "bg-expense-soft text-expense-strong" : "glass text-ink"} />
         </div>
       ) : null}
 

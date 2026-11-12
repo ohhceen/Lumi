@@ -28,7 +28,7 @@ function NavLink({ href, label, icon: Icon, active, sub = false }: { href: strin
 export function Sidebar({ name, children }: { name: string; children?: React.ReactNode }) {
   const pathname = usePathname();
   return (
-    <aside className="sticky top-4 m-4 mr-0 hidden h-[calc(100dvh-2rem)] w-60 shrink-0 flex-col overflow-y-auto rounded-3xl bg-white px-3.5 py-6 shadow-pop lg:flex">
+    <aside className="sticky top-4 m-4 mr-0 hidden h-[calc(100dvh-2rem)] w-60 shrink-0 flex-col overflow-y-auto rounded-3xl glass px-3.5 py-6 shadow-pop lg:flex">
       <Link href="/" className="group mb-8 flex items-center gap-3 px-2">
         <LogoMark className="size-11" />
         <div>
@@ -65,7 +65,7 @@ export function Sidebar({ name, children }: { name: string; children?: React.Rea
 
 export function MobileTopBar({ children }: { children?: React.ReactNode }) {
   return (
-    <header className="sticky top-0 z-30 flex items-center justify-between bg-white px-4 py-3 shadow-soft lg:hidden">
+    <header className="sticky top-0 z-30 flex items-center justify-between bg-white/72 px-4 backdrop-blur-[22px] backdrop-saturate-[1.6] py-3 shadow-soft lg:hidden">
       <Link href="/" className="flex items-center gap-2">
         <LogoMark className="size-9" />
         <span className="text-lg font-black text-ink">Lumi</span>
@@ -78,7 +78,7 @@ export function MobileTopBar({ children }: { children?: React.ReactNode }) {
 export function BottomNav() {
   const pathname = usePathname();
   return (
-    <nav aria-label="Navigasi utama" className="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-white pb-[env(safe-area-inset-bottom)] lg:hidden">
+    <nav aria-label="Navigasi utama" className="fixed inset-x-0 bottom-0 z-30 border-t border-white/70 bg-white/72 backdrop-blur-[22px] backdrop-saturate-[1.6] pb-[env(safe-area-inset-bottom)] lg:hidden">
       <ul className="mx-auto grid max-w-lg grid-cols-6">
         {MOBILE_NAV_ITEMS.map(({ href, short, icon: Icon, also }) => {
           const active = isActive(pathname, href) || also.some((p) => isActive(pathname, p));

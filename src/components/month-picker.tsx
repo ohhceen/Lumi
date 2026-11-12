@@ -22,7 +22,7 @@ export function MonthPicker({ value, param = "month", className }: { value: Year
   };
 
   return (
-    <div className={cn("inline-flex items-center gap-1 rounded-full bg-white p-1 shadow-soft ring-1 ring-line", pending && "opacity-70", className)}>
+    <div className={cn("inline-flex items-center gap-1 rounded-full glass p-1 shadow-soft", pending && "opacity-70", className)}>
       <button type="button" aria-label="Bulan sebelumnya" onClick={() => go(shiftMonth(value, -1))} className="rounded-full p-2 text-ink-soft hover:bg-primary-soft hover:text-ink">
         <ChevronLeft className="size-4" />
       </button>

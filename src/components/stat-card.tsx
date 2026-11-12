@@ -29,7 +29,7 @@ export function StatCard({
   return (
     <div
       className={cn(
-        "relative overflow-hidden rounded-3xl bg-card p-5 shadow-soft transition-transform duration-200 hover:-translate-y-0.5 animate-pop-in",
+        "relative overflow-hidden rounded-3xl glass p-5 shadow-soft transition-transform duration-200 hover:-translate-y-0.5 animate-pop-in",
         highlight && "shadow-pop",
         className,
       )}

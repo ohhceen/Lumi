@@ -68,7 +68,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
   return (
     <div className="space-y-5">
       {/* Hero */}
-      <section aria-label="Sapaan" className="rounded-3xl bg-card p-5 shadow-pop sm:p-7">
+      <section aria-label="Sapaan" className="rounded-3xl glass p-5 shadow-pop sm:p-7">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div className="min-w-0">
             <p className="text-sm font-extrabold text-ink-soft capitalize">{formatDateLong(ctx.today)}</p>
@@ -134,7 +134,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
       {hasObligations ? <UpcomingCard items={upcoming} /> : null}
 
       {tone === "great" && net > 0 ? (
-        <section aria-label="Pencapaian" className="flex items-center gap-3 rounded-3xl bg-card px-4 py-3 shadow-soft">
+        <section aria-label="Pencapaian" className="flex items-center gap-3 rounded-3xl glass px-4 py-3 shadow-soft">
           <span aria-hidden className="inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-income-soft text-income-strong">
             <Sparkles className="size-5" />
           </span>

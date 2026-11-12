@@ -191,7 +191,7 @@ function PaymentHistory({ inst }: { inst: Awaited<ReturnType<typeof getInstallme
 
 function Pill({ label, value }: { label: string; value: string }) {
   return (
-    <div className="min-w-0 rounded-3xl bg-white px-3 py-3 shadow-soft sm:px-4">
+    <div className="min-w-0 rounded-3xl glass px-3 py-3 shadow-soft sm:px-4">
       <p className="truncate text-[11px] font-extrabold text-ink-soft sm:text-xs">{label}</p>
       <p className="tabular truncate text-sm font-black text-ink sm:text-lg">{value}</p>
     </div>

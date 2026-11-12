@@ -265,7 +265,7 @@ function TypeTabs({ active }: { active: "all" | TransactionType }) {
     { key: "expense", href: "/expenses", label: "Pengeluaran" },
   ] as const;
   return (
-    <nav aria-label="Jenis transaksi" className="mb-4 inline-flex rounded-full bg-white p-1 shadow-soft">
+    <nav aria-label="Jenis transaksi" className="mb-4 inline-flex rounded-full glass p-1 shadow-soft">
       {tabs.map((t) => (
         <Link
           key={t.key}

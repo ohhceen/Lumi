@@ -13,7 +13,7 @@ export function EmptyState({
   className?: string;
 }) {
   return (
-    <div className={cn("flex flex-col items-center justify-center rounded-3xl border-2 border-dashed border-line bg-white px-6 py-10 text-center", className)}>
+    <div className={cn("flex flex-col items-center justify-center rounded-3xl glass border-2 border-dashed border-line px-6 py-10 text-center", className)}>
       <span aria-hidden className="inline-flex size-14 items-center justify-center rounded-full bg-cream text-ink-soft">
         <Inbox className="size-6" strokeWidth={2} />
       </span>

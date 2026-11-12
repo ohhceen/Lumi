@@ -25,20 +25,20 @@
   --color-field: #ffffff;
   --color-popover: #ffffff;
   --color-income: #7fcb9b;
-  --color-income-strong: #17633f;
+  --color-income-strong: #11502f;
   --color-income-soft: #eef7f1;
   --color-expense: #f2958a;
-  --color-expense-strong: #a8322a;
+  --color-expense-strong: #8a2620;
   --color-expense-soft: #fbeeec;
   --color-accent: #e8a20c;            /* warning amber (70–89% budgets) */
-  --color-accent-strong: #7a5200;
+  --color-accent-strong: #5c3d00;
   --color-accent-soft: #fff5dc;
-  --color-warn: #b8620f;
+  --color-warn: #6e3804;
   --color-warn-soft: #fff1e4;
   --color-ink: #1d1d1f;
-  --color-ink-soft: #5f5f66;
-  --color-ink-faint: #6e6e76;
-  --color-line: #ececef;
+  --color-ink-soft: #45454c;        /* darker than on solid white so it holds 4.5:1 on 72% glass */
+  --color-ink-faint: #4a4a52;
+  --color-line: rgb(29 29 31 / 0.1);
   --color-on-dark: #ffffff;           /* text placed directly on the plum background */
   --color-on-dark-soft: #e3d6e8;
 
@@ -124,9 +124,21 @@
   z-index: -1;
   pointer-events: none;
   background:
+    radial-gradient(ellipse 30% 22% at 62% 32%, rgb(214 120 190 / 0.55) 0%, rgb(214 120 190 / 0) 70%),
+    radial-gradient(ellipse 28% 20% at 30% 70%, rgb(140 100 230 / 0.5) 0%, rgb(140 100 230 / 0) 70%),
+    radial-gradient(ellipse 25% 18% at 80% 62%, rgb(255 150 140 / 0.35) 0%, rgb(255 150 140 / 0) 70%),
     radial-gradient(ellipse 45% 50% at 15% 15%, rgb(176 110 190 / 0.3) 0%, rgb(176 110 190 / 0) 70%),
     radial-gradient(ellipse 40% 45% at 90% 85%, rgb(232 140 150 / 0.18) 0%, rgb(232 140 150 / 0) 70%),
     linear-gradient(165deg, #2a1730 0%, #1e1024 55%, #140a18 100%);
+}
+
+/* Lumi glass surface: 72% white + blur. Text tokens above are tuned so
+   ink / ink-soft / *-strong keep >= 4.5:1 on it even over the darkest plum. */
+@utility glass {
+  background-color: rgb(255 255 255 / 0.72);
+  -webkit-backdrop-filter: blur(22px) saturate(160%);
+  backdrop-filter: blur(22px) saturate(160%);
+  border: 1px solid rgb(255 255 255 / 0.7);
 }
 
 .select-chevron {

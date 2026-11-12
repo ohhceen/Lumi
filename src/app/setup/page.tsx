@@ -9,7 +9,7 @@ export default function SetupPage() {
   if (getSupabaseConfig()) redirect("/");
   return (
     <main className="bg-space flex min-h-dvh items-center justify-center px-4 py-10">
-      <div className="w-full max-w-lg rounded-3xl border-2 border-white bg-card p-7 shadow-pop">
+      <div className="w-full max-w-lg rounded-3xl glass p-7 shadow-pop">
         <LogoMark className="mx-auto size-16" />
         <h1 className="mt-3 text-center text-2xl font-black">Supabase belum terhubung</h1>
         <p className="mt-2 text-center text-sm font-semibold text-ink-soft">Aplikasi ini butuh database untuk menyimpan catatanmu. Ikuti langkah berikut:</p>
