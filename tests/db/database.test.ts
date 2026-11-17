@@ -374,6 +374,8 @@ describe.skipIf(!available)("database (real migrations)", () => {
       expect((await plan(alice)).salary).toBe("9000000");
       expect(await as(alice, () => q("select 1 from salary_plans"))).toHaveLength(1);
       expect(await balance(alice)).toBe(before);
+      await as(alice, () => q("update salary_plans set needs_amount = 4500000, wants_amount = 2700000, savings_amount = 1800000"));
+      expect(await balance(alice)).toBe(before);
       // bob sees nothing and cannot write alice's row
       expect(await as(bob, () => q("select 1 from salary_plans"))).toHaveLength(0);
       expect((await pgError(as(bob, () => q("insert into salary_plans (user_id, salary) values ($1, 1)", [alice])))).code).toBe("42501");
@@ -381,8 +383,9 @@ describe.skipIf(!available)("database (real migrations)", () => {
       expect((await plan(alice)).salary).toBe("9000000");
     });
 
-    it("rejects negative salaries and non-array items", async () => {
+    it("rejects negative salaries, negative pos and non-array items", async () => {
       expect((await pgError(as(bob, () => q("insert into salary_plans (salary) values (-1)")))).code).toBe("23514");
+      expect((await pgError(as(bob, () => q("insert into salary_plans (salary, wants_amount) values (1, -1)")))).code).toBe("23514");
       expect((await pgError(as(bob, () => q("insert into salary_plans (salary, items) values (1, '{}')")))).code).toBe("23514");
     });
   });

@@ -1,6 +1,8 @@
 /**
- * Rencana Gaji: a what-if split of a salary the user types in, before it is
- * received. Pure maths only; it never reads or changes transactions.
+ * Rencana Gaji: split a salary the user types in into three pos
+ * (Kebutuhan / Keinginan / Tabungan) before it is received. Each pos can
+ * optionally hold a breakdown of what it will pay for. Pure maths only;
+ * it never reads or changes transactions.
  */
 
 export const BUCKETS = ["needs", "wants", "savings"] as const;
@@ -12,54 +14,86 @@ export const BUCKET_LABELS: Record<Bucket, string> = {
   savings: "Tabungan",
 };
 
+export const BUCKET_HINTS: Record<Bucket, string> = {
+  needs: "Wajib dibayar: sewa, makan, transport, tagihan",
+  wants: "Boleh ditunda: hiburan, nongkrong, hobi",
+  savings: "Untuk masa depan: dana darurat, investasi",
+};
+
+export type Allocations = Record<Bucket, number>;
+
 export interface PlanItem {
   name: string;
   amount: number;
   bucket: Bucket;
 }
 
-export interface PlanSummary {
-  totals: Record<Bucket, number>;
-  /** Whole percent of the salary per bucket (0 when salary is 0). */
-  percents: Record<Bucket, number>;
-  spent: number;
-  /** salary − spent; negative when the plan is bigger than the salary. */
-  left: number;
-  /** Whole percent of the salary still unplanned (0 when over). */
-  leftPercent: number;
-  status: "empty" | "over" | "exact" | "under";
-  /** e.g. "52 / 15 / 20" — Kebutuhan / Keinginan / Tabungan */
-  pattern: string;
+export interface BucketDetail {
+  /** Sum of the optional breakdown items. */
+  itemsTotal: number;
+  /** allocation − itemsTotal (negative when the breakdown is bigger than the pos). */
+  itemsLeft: number;
+  itemsCount: number;
 }
 
-const pct = (part: number, whole: number) => (whole > 0 ? Math.round((part / whole) * 100) : 0);
+export interface PlanSummary {
+  allocations: Allocations;
+  /** Whole percent of the salary per pos (0 when salary is 0). */
+  percents: Record<Bucket, number>;
+  allocated: number;
+  /** salary − allocated; negative when the pos add up to more than the salary. */
+  left: number;
+  /** Whole percent of the salary not given to any pos (0 when over). */
+  leftPercent: number;
+  status: "empty" | "over" | "exact" | "under";
+  /** e.g. "50 / 30 / 20" — Kebutuhan / Keinginan / Tabungan */
+  pattern: string;
+  details: Record<Bucket, BucketDetail>;
+}
 
-export function summarizePlan(salary: number, items: readonly PlanItem[]): PlanSummary {
-  const totals: Record<Bucket, number> = { needs: 0, wants: 0, savings: 0 };
-  for (const it of items) totals[it.bucket] += it.amount;
-  const spent = totals.needs + totals.wants + totals.savings;
-  const left = salary - spent;
-  const percents = { needs: pct(totals.needs, salary), wants: pct(totals.wants, salary), savings: pct(totals.savings, salary) };
+export const percentOf = (part: number, whole: number) => (whole > 0 ? Math.round((part / whole) * 100) : 0);
+
+/** Rupiah for a whole percent of the salary, rounded down so the pos never add up to more than 100%. */
+export function amountForPercent(salary: number, percent: number): number {
+  const p = Math.max(0, Math.min(100, Math.round(percent)));
+  return Math.floor((salary * p) / 100);
+}
+
+export function itemTotals(items: readonly PlanItem[]): Allocations {
+  const t: Allocations = { needs: 0, wants: 0, savings: 0 };
+  for (const it of items) t[it.bucket] += it.amount;
+  return t;
+}
+
+export function summarizePlan(salary: number, allocations: Allocations, items: readonly PlanItem[] = []): PlanSummary {
+  const allocated = allocations.needs + allocations.wants + allocations.savings;
+  const left = salary - allocated;
+  const percents = { needs: percentOf(allocations.needs, salary), wants: percentOf(allocations.wants, salary), savings: percentOf(allocations.savings, salary) };
   const status: PlanSummary["status"] = salary <= 0 ? "empty" : left < 0 ? "over" : left === 0 ? "exact" : "under";
+  const totals = itemTotals(items);
+  const details = Object.fromEntries(
+    BUCKETS.map((b) => [b, { itemsTotal: totals[b], itemsLeft: allocations[b] - totals[b], itemsCount: items.filter((i) => i.bucket === b).length }]),
+  ) as Record<Bucket, BucketDetail>;
   return {
-    totals,
+    allocations: { ...allocations },
     percents,
-    spent,
+    allocated,
     left,
-    leftPercent: left > 0 ? pct(left, salary) : 0,
+    leftPercent: left > 0 ? percentOf(left, salary) : 0,
     status,
     pattern: `${percents.needs} / ${percents.wants} / ${percents.savings}`,
+    details,
   };
 }
 
-/** Donut segments as fractions (0–1) of max(salary, spent), so an over-budget plan still draws a full ring. */
+/** Donut segments as fractions (0–1) of max(salary, allocated), so an over-allocated plan still draws a full ring. */
 export function donutShares(salary: number, summary: PlanSummary): Record<Bucket | "left", number> {
-  const base = Math.max(salary, summary.spent);
+  const base = Math.max(salary, summary.allocated);
   if (base <= 0) return { needs: 0, wants: 0, savings: 0, left: 0 };
   return {
-    needs: summary.totals.needs / base,
-    wants: summary.totals.wants / base,
-    savings: summary.totals.savings / base,
+    needs: summary.allocations.needs / base,
+    wants: summary.allocations.wants / base,
+    savings: summary.allocations.savings / base,
     left: Math.max(0, summary.left) / base,
   };
 }

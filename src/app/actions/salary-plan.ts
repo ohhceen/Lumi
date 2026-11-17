@@ -10,10 +10,22 @@ import { fieldErrors, salaryPlanSchema } from "@/lib/validation";
 export async function saveSalaryPlan(input: unknown): Promise<ActionResult> {
   const parsed = salaryPlanSchema.safeParse(input);
   if (!parsed.success) return { ok: false, message: "Periksa lagi gaji dan rencananya ya.", fieldErrors: fieldErrors(parsed.error) };
+  const d = parsed.data;
   const { supabase, user } = await getSession();
   const { error } = await supabase
     .from("salary_plans")
-    .upsert({ user_id: user.id, salary: parsed.data.salary, items: parsed.data.items, updated_at: new Date().toISOString() }, { onConflict: "user_id" });
+    .upsert(
+      {
+        user_id: user.id,
+        salary: d.salary,
+        needs_amount: d.allocations.needs,
+        wants_amount: d.allocations.wants,
+        savings_amount: d.allocations.savings,
+        items: d.items,
+        updated_at: new Date().toISOString(),
+      },
+      { onConflict: "user_id" },
+    );
   if (error) return { ok: false, message: friendlyDbError(error, "Rencana gaji gagal disimpan.") };
   revalidatePath("/salary-plan");
   return { ok: true, message: "Rencana gaji disimpan." };

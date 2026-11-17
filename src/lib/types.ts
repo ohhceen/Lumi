@@ -104,6 +104,7 @@ export interface InstallmentPayment {
 
 export interface SalaryPlan {
   salary: number;
+  allocations: import("./salary-plan").Allocations;
   items: import("./salary-plan").PlanItem[];
   updated_at: string;
 }

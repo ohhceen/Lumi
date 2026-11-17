@@ -179,12 +179,17 @@ export async function getInstallments(): Promise<(Installment & { payments: Inst
 /** The user's saved Rencana Gaji, or null. Items that no longer validate are dropped. */
 export async function getSalaryPlan(): Promise<SalaryPlan | null> {
   const { supabase } = await getSession();
-  const { data, error } = await supabase.from("salary_plans").select("salary, items, updated_at").maybeSingle();
+  const { data, error } = await supabase.from("salary_plans").select("salary, needs_amount, wants_amount, savings_amount, items, updated_at").maybeSingle();
   if (error) throw new DataError("rencana gaji", error);
   if (!data) return null;
   const items = Array.isArray(data.items) ? data.items.flatMap((it: unknown) => {
     const r = planItemSchema.safeParse(it);
     return r.success ? [r.data] : [];
   }) : [];
-  return { salary: num(data.salary), items, updated_at: data.updated_at };
+  return {
+    salary: num(data.salary),
+    allocations: { needs: num(data.needs_amount), wants: num(data.wants_amount), savings: num(data.savings_amount) },
+    items,
+    updated_at: data.updated_at,
+  };
 }

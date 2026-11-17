@@ -180,9 +180,31 @@ export const planItemSchema = z.object({
   bucket: z.enum(["needs", "wants", "savings"], { error: "Pilih kelompoknya." }),
 });
 
+/** Rupiah that may be 0 (an empty pos). */
+const rupiahOrZero = (label: string) =>
+  z.preprocess(
+    (v) => {
+      if (typeof v === "number") return v;
+      const str = String(v ?? "").trim();
+      if (str === "") return 0;
+      const n = parseIDRInput(str);
+      return str.startsWith("-") && !Number.isNaN(n) ? -n : n;
+    },
+    z
+      .number({ error: `${label} tidak valid.` })
+      .refine((n) => Number.isInteger(n), `${label} harus bilangan bulat Rupiah.`)
+      .refine((n) => n >= 0, `${label} tidak boleh negatif.`)
+      .refine((n) => n <= MAX_AMOUNT, `${label} terlalu besar.`),
+  );
+
 export const salaryPlanSchema = z.object({
   salary: rupiah("Gaji"),
-  items: z.array(planItemSchema).max(MAX_PLAN_ITEMS, `Maksimal ${MAX_PLAN_ITEMS} rencana.`),
+  allocations: z.object({
+    needs: rupiahOrZero("Pos Kebutuhan"),
+    wants: rupiahOrZero("Pos Keinginan"),
+    savings: rupiahOrZero("Pos Tabungan"),
+  }),
+  items: z.array(planItemSchema).max(MAX_PLAN_ITEMS, `Maksimal ${MAX_PLAN_ITEMS} rincian.`).default([]),
 });
 
 export function fieldErrors(error: z.ZodError): Record<string, string[]> {
