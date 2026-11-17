@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { ArrowRight, CircleCheck, PiggyBank, Plus, Sparkles, TrendingDown, TrendingUp, TriangleAlert, Wallet } from "lucide-react";
+import { cookies } from "next/headers";
+import { ArrowRight, CircleCheck, PiggyBank, Plus, Sparkles, TrendingDown, TrendingUp, TriangleAlert } from "lucide-react";
 import { BudgetAlerts } from "@/components/budget-alerts";
 import { BudgetRings } from "@/components/budget-rings";
 import { CategoryDonut } from "@/components/charts/category-donut";
@@ -10,6 +11,7 @@ import { TransactionDialog } from "@/components/forms/transaction-dialog";
 import { MonthPicker } from "@/components/month-picker";
 import { QuickAdd } from "@/components/quick-add";
 import { UpcomingCard } from "@/components/upcoming-card";
+import { BalanceCard } from "@/components/balance-card";
 import { StatCard } from "@/components/stat-card";
 import { TransactionList } from "@/components/transaction-list";
 import { Button } from "@/components/ui/button";
@@ -20,6 +22,7 @@ import { buildBudgetProgress, categoryBreakdown, computeBalance, dailySeries, mo
 import { formatIDR, formatPercent } from "@/lib/format";
 import { billsForMonth, installmentProgress, upcomingObligations } from "@/lib/obligations";
 import { greeting, moodFor, motivationalMessage } from "@/lib/greeting";
+import { HIDE_BALANCE_COOKIE } from "@/lib/privacy";
 import { cn } from "@/lib/utils";
 
 export const metadata = { title: "Dashboard" };
@@ -27,6 +30,7 @@ export const metadata = { title: "Dashboard" };
 export default async function DashboardPage({ searchParams }: { searchParams: Promise<{ month?: string }> }) {
   const sp = await searchParams;
   const ctx = await getAppContext();
+  const hideBalance = (await cookies()).get(HIDE_BALANCE_COOKIE)?.value === "1";
   const ym = parseYearMonth(sp.month, ctx.currentMonth);
   const range = monthRange(ym);
   const trendStart = monthRange(shiftMonth(ym, -5)).start;
@@ -91,13 +95,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
 
       {/* Summary cards */}
       <section aria-label="Ringkasan" className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <StatCard
-          highlight
-          label="Total Saldo"
-          icon={Wallet}
-          value={<span className={balance < 0 ? "text-expense-strong" : undefined}>{formatIDR(balance)}</span>}
-          sub={<>Saldo awal {formatIDR(ctx.settings.initial_balance)}</>}
-        />
+        <BalanceCard balance={balance} initialBalance={ctx.settings.initial_balance} initiallyHidden={hideBalance} />
         <StatCard
           label="Pemasukan"
           tone="income"

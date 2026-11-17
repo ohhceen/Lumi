@@ -5,8 +5,8 @@ import { createClient } from "@/lib/supabase/server";
 import { currentYearMonth, DEFAULT_TIMEZONE, todayInTimezone } from "@/lib/dates";
 import { filtersToDateRange, PAGE_SIZE } from "@/lib/filters";
 import type { MonthTotalRow, Totals } from "@/lib/finance";
-import type { Bill, BillPayment, Budget, Category, Installment, InstallmentPayment, Profile, Settings, TransactionWithCategory, Transaction, YearMonth } from "@/lib/types";
-import type { TransactionFilters } from "@/lib/validation";
+import type { Bill, BillPayment, Budget, Category, Installment, InstallmentPayment, Profile, SalaryPlan, Settings, TransactionWithCategory, Transaction, YearMonth } from "@/lib/types";
+import { planItemSchema, type TransactionFilters } from "@/lib/validation";
 
 class DataError extends Error {
   constructor(what: string, cause: { message: string }) {
@@ -174,4 +174,17 @@ export async function getInstallments(): Promise<(Installment & { payments: Inst
     monthly_amount: num(i.monthly_amount),
     payments: [...i.payments].map((p) => ({ ...p, amount: num(p.amount) })).sort((a, b) => a.paid_on.localeCompare(b.paid_on)),
   }));
+}
+
+/** The user's saved Rencana Gaji, or null. Items that no longer validate are dropped. */
+export async function getSalaryPlan(): Promise<SalaryPlan | null> {
+  const { supabase } = await getSession();
+  const { data, error } = await supabase.from("salary_plans").select("salary, items, updated_at").maybeSingle();
+  if (error) throw new DataError("rencana gaji", error);
+  if (!data) return null;
+  const items = Array.isArray(data.items) ? data.items.flatMap((it: unknown) => {
+    const r = planItemSchema.safeParse(it);
+    return r.success ? [r.data] : [];
+  }) : [];
+  return { salary: num(data.salary), items, updated_at: data.updated_at };
 }

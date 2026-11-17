@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ChevronRight, CreditCard, LogOut, Settings, Shapes } from "lucide-react";
+import { Calculator, ChevronRight, CreditCard, LogOut, Settings, Shapes } from "lucide-react";
 import { PageHeader } from "@/components/page-header";
 import { Card } from "@/components/ui/card";
 import { logout } from "@/app/actions/auth";
@@ -9,6 +9,7 @@ export const metadata = { title: "Lainnya" };
 
 const LINKS = [
   { href: "/installments", label: "Cicilan", desc: "Progres dan jadwal cicilan", icon: CreditCard },
+  { href: "/salary-plan", label: "Rencana Gaji", desc: "Simulasi pembagian gaji sebelum diterima", icon: Calculator },
   { href: "/categories", label: "Kategori", desc: "Atur kategori pemasukan & pengeluaran", icon: Shapes },
   { href: "/settings", label: "Pengaturan", desc: "Saldo awal, zona waktu, profil", icon: Settings },
 ] as const;

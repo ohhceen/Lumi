@@ -363,4 +363,27 @@ describe.skipIf(!available)("database (real migrations)", () => {
       expect(usage.percentage).toBe(75);
     });
   });
+  describe("salary plans (simulation only)", () => {
+    const plan = (uid: string) => as(uid, async () => (await q<{ salary: string; items: unknown[] }>("select salary, items from salary_plans"))[0]);
+
+    it("keeps one private plan per user and never touches the balance", async () => {
+      const before = await balance(alice);
+      const items = JSON.stringify([{ name: "Kos", amount: 1800000, bucket: "needs" }]);
+      await as(alice, () => q("insert into salary_plans (salary, items) values (8000000, $1::jsonb)", [items]));
+      await as(alice, () => q("insert into salary_plans (salary, items) values (9000000, '[]') on conflict (user_id) do update set salary = excluded.salary, items = excluded.items"));
+      expect((await plan(alice)).salary).toBe("9000000");
+      expect(await as(alice, () => q("select 1 from salary_plans"))).toHaveLength(1);
+      expect(await balance(alice)).toBe(before);
+      // bob sees nothing and cannot write alice's row
+      expect(await as(bob, () => q("select 1 from salary_plans"))).toHaveLength(0);
+      expect((await pgError(as(bob, () => q("insert into salary_plans (user_id, salary) values ($1, 1)", [alice])))).code).toBe("42501");
+      await as(bob, () => q("update salary_plans set salary = 1"));
+      expect((await plan(alice)).salary).toBe("9000000");
+    });
+
+    it("rejects negative salaries and non-array items", async () => {
+      expect((await pgError(as(bob, () => q("insert into salary_plans (salary) values (-1)")))).code).toBe("23514");
+      expect((await pgError(as(bob, () => q("insert into salary_plans (salary, items) values (1, '{}')")))).code).toBe("23514");
+    });
+  });
 });

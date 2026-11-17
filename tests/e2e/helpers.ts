@@ -39,6 +39,7 @@ export async function dbBalance(): Promise<number> {
 
 export async function resetData() {
   const uid = await userId();
+  await sql("delete from salary_plans where user_id = $1", [uid]);
   await sql("delete from bills where user_id = $1", [uid]);
   await sql("delete from installments where user_id = $1", [uid]);
   await sql("delete from budgets where user_id = $1", [uid]);

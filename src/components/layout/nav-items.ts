@@ -1,4 +1,4 @@
-import { ArrowLeftRight, ChartPie, CreditCard, Ellipsis, LayoutDashboard, PiggyBank, Receipt, Settings, Shapes, TrendingDown, TrendingUp } from "lucide-react";
+import { ArrowLeftRight, Calculator, ChartPie, CreditCard, Ellipsis, LayoutDashboard, PiggyBank, Receipt, Settings, Shapes, TrendingDown, TrendingUp } from "lucide-react";
 
 /** Sidebar (desktop). */
 export const NAV_ITEMS = [
@@ -7,6 +7,7 @@ export const NAV_ITEMS = [
   { href: "/budget", label: "Anggaran", icon: PiggyBank },
   { href: "/bills", label: "Tagihan", icon: Receipt },
   { href: "/installments", label: "Cicilan", icon: CreditCard },
+  { href: "/salary-plan", label: "Rencana Gaji", icon: Calculator },
   { href: "/reports", label: "Laporan", icon: ChartPie },
   { href: "/categories", label: "Kategori", icon: Shapes },
   { href: "/settings", label: "Pengaturan", icon: Settings },
@@ -25,7 +26,7 @@ export const MOBILE_NAV_ITEMS = [
   { href: "/budget", short: "Anggaran", icon: PiggyBank, also: [] as string[] },
   { href: "/bills", short: "Tagihan", icon: Receipt, also: ["/installments"] },
   { href: "/reports", short: "Laporan", icon: ChartPie, also: [] as string[] },
-  { href: "/more", short: "Lainnya", icon: Ellipsis, also: ["/categories", "/settings"] },
+  { href: "/more", short: "Lainnya", icon: Ellipsis, also: ["/categories", "/settings", "/salary-plan"] },
 ] as const;
 
 export function isActive(pathname: string, href: string) {

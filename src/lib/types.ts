@@ -101,3 +101,9 @@ export interface InstallmentPayment {
   paid_on: string;
   transaction_id: string | null;
 }
+
+export interface SalaryPlan {
+  salary: number;
+  items: import("./salary-plan").PlanItem[];
+  updated_at: string;
+}

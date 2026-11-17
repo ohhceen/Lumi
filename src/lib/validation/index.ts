@@ -170,6 +170,21 @@ export const transactionFilterSchema = z.object({
 });
 export type TransactionFilters = z.infer<typeof transactionFilterSchema>;
 
+// ---------------------------------------------------------------- rencana gaji
+
+export const MAX_PLAN_ITEMS = 100;
+
+export const planItemSchema = z.object({
+  name: z.string({ error: "Nama rencana wajib diisi." }).trim().min(1, "Nama rencana wajib diisi.").max(60, "Nama rencana maksimal 60 karakter."),
+  amount: rupiah("Nominal"),
+  bucket: z.enum(["needs", "wants", "savings"], { error: "Pilih kelompoknya." }),
+});
+
+export const salaryPlanSchema = z.object({
+  salary: rupiah("Gaji"),
+  items: z.array(planItemSchema).max(MAX_PLAN_ITEMS, `Maksimal ${MAX_PLAN_ITEMS} rencana.`),
+});
+
 export function fieldErrors(error: z.ZodError): Record<string, string[]> {
   const out: Record<string, string[]> = {};
   for (const issue of error.issues) {

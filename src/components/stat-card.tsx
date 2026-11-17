@@ -16,6 +16,7 @@ export function StatCard({
   icon: Icon,
   tone = "primary",
   highlight = false,
+  action,
   className,
 }: {
   label: string;
@@ -24,6 +25,8 @@ export function StatCard({
   icon: LucideIcon;
   tone?: keyof typeof tones;
   highlight?: boolean;
+  /** Small control at the end of the label row (e.g. show/hide). */
+  action?: React.ReactNode;
   className?: string;
 }) {
   return (
@@ -39,6 +42,7 @@ export function StatCard({
           <Icon className="size-[18px]" strokeWidth={2.5} />
         </span>
         <p className="text-sm font-extrabold text-ink-soft">{label}</p>
+        {action ? <div className="ml-auto">{action}</div> : null}
       </div>
       <p className={cn("tabular mt-3 font-black tracking-tight text-ink", highlight ? "text-[1.85rem] sm:text-[2rem]" : "text-2xl sm:text-[1.65rem]")}>{value}</p>
       {sub ? <div className="mt-1 text-xs font-bold text-ink-faint">{sub}</div> : null}
