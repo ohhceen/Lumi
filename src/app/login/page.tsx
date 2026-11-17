@@ -1,5 +1,5 @@
 import { LoginForm } from "./login-form";
-import { GoogleButton } from "./google-button";
+import { GoogleSignIn } from "./google-sign-in";
 import { LogoMark } from "@/components/brand";
 import { loginErrorMessage } from "@/lib/auth-errors";
 
@@ -21,7 +21,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
             {oauthError}
           </p>
         ) : null}
-        <GoogleButton />
+        <GoogleSignIn />
         <div className="my-5 flex items-center gap-3 text-xs font-bold text-ink-faint" aria-hidden="true">
           <span className="h-px flex-1 bg-line" /> atau dengan email <span className="h-px flex-1 bg-line" />
         </div>

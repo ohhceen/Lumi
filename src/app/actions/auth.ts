@@ -3,6 +3,8 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { z } from "zod";
+import { loginErrorMessage, oauthErrorCode } from "@/lib/auth-errors";
+import { applyGoogleName } from "@/lib/google-profile";
 import { createClient } from "@/lib/supabase/server";
 
 const loginSchema = z.object({
@@ -50,4 +52,26 @@ export async function loginWithGoogle() {
   });
   if (error || !data.url) redirect("/login?error=oauth_failed");
   redirect(data.url);
+}
+
+const idTokenSchema = z.object({
+  credential: z.string().min(20).max(8192),
+  nonce: z.string().min(16).max(128),
+});
+
+/**
+ * "Sign in with Google" button (Google Identity Services): the browser gets
+ * a Google ID token on our own domain and Supabase verifies it here (with
+ * the raw nonce whose SHA-256 was given to Google). Sets the session cookie.
+ */
+export async function loginWithGoogleIdToken(input: unknown): Promise<{ ok: true } | { ok: false; message: string }> {
+  const parsed = idTokenSchema.safeParse(input);
+  if (!parsed.success) return { ok: false, message: loginErrorMessage("oauth_failed")! };
+  const supabase = await createClient();
+  const { data, error } = await supabase.auth.signInWithIdToken({ provider: "google", token: parsed.data.credential, nonce: parsed.data.nonce });
+  if (error || !data.user) {
+    return { ok: false, message: loginErrorMessage(oauthErrorCode(error?.code ?? "oauth_failed", error?.message ?? null))! };
+  }
+  await applyGoogleName(supabase, data.user);
+  return { ok: true };
 }

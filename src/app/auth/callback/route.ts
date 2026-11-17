@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { oauthErrorCode, safeNextPath } from "@/lib/auth-errors";
+import { applyGoogleName } from "@/lib/google-profile";
 
 /**
  * OAuth (Google) return URL. Exchanges the one-time code for a session
@@ -20,11 +21,7 @@ export async function GET(request: NextRequest) {
   const { data, error } = await supabase.auth.exchangeCodeForSession(code);
   if (error || !data.user) return toLogin(oauthErrorCode(error?.code ?? "oauth_failed", error?.message ?? null));
 
-  // First Google login: use the Google display name instead of the default "Teman".
-  const fullName = String(data.user.user_metadata?.full_name ?? data.user.user_metadata?.name ?? "").trim().slice(0, 60);
-  if (fullName) {
-    await supabase.from("profiles").update({ name: fullName }).eq("id", data.user.id).eq("name", "Teman");
-  }
+  await applyGoogleName(supabase, data.user);
 
   return NextResponse.redirect(new URL(safeNextPath(url.searchParams.get("next")), url.origin));
 }
